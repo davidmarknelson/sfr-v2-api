@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RecipeModule } from './features/recipe/recipe.module';
-import { RecipeService } from './features/recipe/services';
+import { UserModule } from './features/user/user.module';
 
 @Module({
   imports: [
     GraphQLModule.forRoot({
       autoSchemaFile: true,
+      sortSchema: true,
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -20,6 +21,7 @@ import { RecipeService } from './features/recipe/services';
       synchronize: true,
     }),
     RecipeModule,
+    UserModule,
   ],
 })
 export class AppModule {}
