@@ -12,7 +12,7 @@ export class RecipeResolver {
   }
 
   @Query(() => Recipe)
-  user(@Args('id', { type: () => Int }) id: number): Promise<Recipe> {
+  recipe(@Args('id', { type: () => Int }) id: number): Promise<Recipe> {
     return this.recipeService.findOneById(id);
   }
 }
