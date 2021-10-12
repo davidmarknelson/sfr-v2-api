@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Args, Int, Query, Resolver } from '@nestjs/graphql';
 import { Recipe } from './recipe.entity';
 import { RecipeService } from './recipe.service';
@@ -12,7 +13,11 @@ export class RecipeResolver {
   }
 
   @Query(() => Recipe)
-  recipe(@Args('id', { type: () => Int }) id: number): Promise<Recipe> {
+  async recipe(@Args('id', { type: () => Int }) id: number): Promise<Recipe> {
+    const recipe = await this.recipeService.findOneById(id);
+    if (!recipe) {
+      throw new NotFoundException();
+    }
     return this.recipeService.findOneById(id);
   }
 }

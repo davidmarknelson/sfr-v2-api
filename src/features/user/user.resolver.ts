@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Args, Int, Query, Resolver } from '@nestjs/graphql';
 import { User } from './user.entity';
 import { UserService } from './user.service';
@@ -12,7 +13,11 @@ export class UserResolver {
   }
 
   @Query(() => User)
-  user(@Args('id', { type: () => Int }) id: number): Promise<User> {
+  async user(@Args('id', { type: () => Int }) id: number): Promise<User> {
+    const user = await this.userService.findOneById(id);
+    if (!user) {
+      throw new NotFoundException();
+    }
     return this.userService.findOneById(id);
   }
 }

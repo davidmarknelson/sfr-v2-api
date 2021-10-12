@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
@@ -10,6 +11,7 @@ const user = {
 
 describe('UserResolver', () => {
   let resolver: UserResolver;
+  let service: UserService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -18,14 +20,15 @@ describe('UserResolver', () => {
         {
           provide: UserService,
           useValue: {
-            findAll: jest.fn().mockReturnValue([user]),
-            findOneById: jest.fn().mockReturnValue(user),
+            findAll: jest.fn().mockResolvedValue([user]),
+            findOneById: jest.fn().mockResolvedValue(user),
           },
         },
       ],
     }).compile();
 
     resolver = module.get<UserResolver>(UserResolver);
+    service = module.get<UserService>(UserService);
   });
 
   it('should be defined', () => {
@@ -34,13 +37,22 @@ describe('UserResolver', () => {
 
   describe('users', () => {
     it('should return an array of users', () => {
-      expect(resolver.users()).toEqual([user]);
+      const serviceSpy = jest.spyOn(service, 'findAll');
+      expect(resolver.users()).resolves.toEqual([user]);
+      expect(serviceSpy).toHaveBeenCalled();
     });
   });
 
   describe('user', () => {
     it('should return a user', () => {
-      expect(resolver.user(1)).toEqual(user);
+      const serviceSpy = jest.spyOn(service, 'findOneById');
+      expect(resolver.user(1)).resolves.toEqual(user);
+      expect(serviceSpy).toHaveBeenCalled();
+    });
+
+    it('should return a not found if there is no user', () => {
+      jest.spyOn(service, 'findOneById').mockResolvedValue(undefined);
+      expect(resolver.user(1)).rejects.toThrowError(NotFoundException);
     });
   });
 });
