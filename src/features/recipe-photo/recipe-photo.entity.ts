@@ -1,19 +1,18 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
-import { RecipePhoto } from '../recipe-photo/recipe-photo.entity';
+import { Recipe } from '../recipe/recipe.entity';
 
 @ObjectType()
 @Entity()
-export class Recipe {
+export class RecipePhoto {
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number;
 
   @Field()
   @Column()
-  name: string;
+  path: string;
 
-  @Field(() => RecipePhoto)
-  @OneToOne(() => RecipePhoto, (recipePhoto) => recipePhoto.recipe)
-  photo: RecipePhoto;
+  @OneToOne(() => Recipe, (recipe) => recipe.photo)
+  recipe: Recipe;
 }

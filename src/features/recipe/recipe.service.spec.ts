@@ -7,7 +7,10 @@ import { RecipeService } from './recipe.service';
 const recipe = {
   id: 1,
   name: 'sandwich',
-  user: { id: 1, username: 'user1', recipes: [] },
+  photo: {
+    id: 1,
+    path: '/recipe-photo/1',
+  },
 };
 
 describe('RecipeService', () => {
