@@ -1,19 +1,21 @@
 import { NotFoundException } from '@nestjs/common';
 import { Args, Int, Query, Resolver } from '@nestjs/graphql';
-import { Recipe } from './recipe.entity';
+import { RecipeType } from './recipe';
 import { RecipeService } from './recipe.service';
 
-@Resolver(() => Recipe)
+@Resolver(() => RecipeType)
 export class RecipeResolver {
   constructor(private recipeService: RecipeService) {}
 
-  @Query(() => [Recipe])
-  recipes(): Promise<Recipe[]> {
+  @Query(() => [RecipeType])
+  recipes(): Promise<RecipeType[]> {
     return this.recipeService.findAll();
   }
 
-  @Query(() => Recipe)
-  async recipe(@Args('id', { type: () => Int }) id: number): Promise<Recipe> {
+  @Query(() => RecipeType)
+  async recipe(
+    @Args('id', { type: () => Int }) id: number,
+  ): Promise<RecipeType> {
     const recipe = await this.recipeService.findOneById(id);
     if (!recipe) {
       throw new NotFoundException();

@@ -1,10 +1,11 @@
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Recipe } from './recipe.entity';
+import { RecipeType } from './recipe';
+import { RecipeEntity } from './recipe.entity';
 import { RecipeService } from './recipe.service';
 
-const recipe = {
+const recipe: RecipeType = {
   id: 1,
   name: 'sandwich',
   photo: {
@@ -15,13 +16,13 @@ const recipe = {
 
 describe('RecipeService', () => {
   let service: RecipeService;
-  let repo: Repository<Recipe>;
+  let repo: Repository<RecipeEntity>;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       providers: [
         {
-          provide: getRepositoryToken(Recipe),
+          provide: getRepositoryToken(RecipeEntity),
           useValue: {
             find: jest.fn().mockResolvedValue([recipe]),
             findOne: jest.fn().mockResolvedValue(recipe),
@@ -32,7 +33,9 @@ describe('RecipeService', () => {
     }).compile();
 
     service = moduleRef.get<RecipeService>(RecipeService);
-    repo = moduleRef.get<Repository<Recipe>>(getRepositoryToken(Recipe));
+    repo = moduleRef.get<Repository<RecipeEntity>>(
+      getRepositoryToken(RecipeEntity),
+    );
   });
 
   it('should be defined', () => {

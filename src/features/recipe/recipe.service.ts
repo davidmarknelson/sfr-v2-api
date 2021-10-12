@@ -1,20 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Recipe } from './recipe.entity';
+import { RecipeEntity } from './recipe.entity';
 
 @Injectable()
 export class RecipeService {
   constructor(
-    @InjectRepository(Recipe)
-    private recipeRepository: Repository<Recipe>,
+    @InjectRepository(RecipeEntity)
+    private recipeRepository: Repository<RecipeEntity>,
   ) {}
 
-  findAll(): Promise<Recipe[]> {
+  findAll(): Promise<RecipeEntity[]> {
     return this.recipeRepository.find();
   }
 
-  findOneById(id: number): Promise<Recipe> {
+  findOneById(id: number): Promise<RecipeEntity> {
     return this.recipeRepository.findOne(id);
   }
 }

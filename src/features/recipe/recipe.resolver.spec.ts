@@ -1,9 +1,10 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { RecipeType } from './recipe';
 import { RecipeResolver } from './recipe.resolver';
 import { RecipeService } from './recipe.service';
 
-const recipe = {
+const recipe: RecipeType = {
   id: 1,
   name: 'sandwich',
   photo: {
