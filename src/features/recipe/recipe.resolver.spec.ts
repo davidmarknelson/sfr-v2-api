@@ -8,17 +8,7 @@ const recipe = {
   user: { id: 1, username: 'user1', recipes: [] },
 };
 
-class MockRecipeService {
-  findAll() {
-    // return jest.fn().mockResolvedValue([recipe]);
-    return [recipe];
-  }
-  findOneById() {
-    return jest.fn().mockResolvedValue(recipe);
-  }
-}
-
-describe('CatResolver', () => {
+describe('RecipeResolver', () => {
   let resolver: RecipeResolver;
 
   beforeEach(async () => {
