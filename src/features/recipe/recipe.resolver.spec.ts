@@ -1,12 +1,17 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { RecipeType } from './recipe';
+import { Difficulty, RecipeType } from './models';
 import { RecipeResolver } from './recipe.resolver';
 import { RecipeService } from './recipe.service';
 
 const recipe: RecipeType = {
   id: 1,
   name: 'sandwich',
+  ingredients: [],
+  instructions: [],
+  description: '',
+  cookTime: 20,
+  difficulty: Difficulty.ONE,
   photo: {
     id: 1,
     path: '/recipe-photo/1',

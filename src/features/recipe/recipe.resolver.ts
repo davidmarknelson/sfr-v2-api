@@ -1,6 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { Args, Int, Query, Resolver } from '@nestjs/graphql';
-import { RecipeType } from './recipe';
+import { RecipeType } from './models';
 import { RecipeService } from './recipe.service';
 
 @Resolver(() => RecipeType)
