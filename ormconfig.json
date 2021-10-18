@@ -1,0 +1,14 @@
+{
+  "type": "postgres",
+  "host": "localhost",
+  "port": 5432,
+  "username": "dmnelson",
+  "password": null,
+  "database": "sfr2_dev",
+  "synchronize": true,
+  "entities": ["dist/**/*.entity.{ts,js}"],
+  "migrations": ["dist/migrations/*.js"],
+  "cli": {
+    "migrationsDir": "src/migrations"
+  }
+}

@@ -1,7 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne } from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { RecipeEntity } from '../recipe/recipe.entity';
 
-@Entity()
+@Entity('recipe_photo')
 export class RecipePhotoEntity {
   @PrimaryGeneratedColumn()
   id: number;

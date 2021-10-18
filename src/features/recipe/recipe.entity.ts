@@ -2,7 +2,7 @@ import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { RecipePhotoEntity } from '../recipe-photo/recipe-photo.entity';
 import { Difficulty } from './models';
 
-@Entity()
+@Entity('recipe')
 export class RecipeEntity {
   @PrimaryGeneratedColumn()
   id: number;
