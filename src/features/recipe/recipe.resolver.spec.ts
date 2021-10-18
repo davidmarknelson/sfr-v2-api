@@ -47,7 +47,7 @@ describe('RecipeResolver', () => {
   describe('recipes', () => {
     it('should return an array of recipes', () => {
       const serviceSpy = jest.spyOn(service, 'findAll');
-      expect(resolver.recipes()).resolves.toEqual([recipe]);
+      expect(resolver.recipes({ skip: 0, take: 9 })).resolves.toEqual([recipe]);
       expect(serviceSpy).toHaveBeenCalled();
     });
   });
@@ -55,13 +55,15 @@ describe('RecipeResolver', () => {
   describe('recipe', () => {
     it('should return a recipe', () => {
       const serviceSpy = jest.spyOn(service, 'findOneById');
-      expect(resolver.recipe(1)).resolves.toEqual(recipe);
+      expect(resolver.recipe({ id: 1 })).resolves.toEqual(recipe);
       expect(serviceSpy).toHaveBeenCalled();
     });
 
     it('should return a not found if there is no recipe', () => {
       jest.spyOn(service, 'findOneById').mockResolvedValue(undefined);
-      expect(resolver.recipe(1)).rejects.toThrowError(NotFoundException);
+      expect(resolver.recipe({ id: 1 })).rejects.toThrowError(
+        NotFoundException,
+      );
     });
   });
 });

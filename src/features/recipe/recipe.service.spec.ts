@@ -1,13 +1,18 @@
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { RecipeType } from './recipe';
+import { Difficulty, RecipeType } from './models';
 import { RecipeEntity } from './recipe.entity';
 import { RecipeService } from './recipe.service';
 
 const recipe: RecipeType = {
   id: 1,
   name: 'sandwich',
+  description: '',
+  ingredients: [],
+  instructions: [],
+  cookTime: 0,
+  difficulty: Difficulty.ONE,
   photo: {
     id: 1,
     path: '/recipe-photo/1',
@@ -45,7 +50,7 @@ describe('RecipeService', () => {
   describe('findAll', () => {
     it('should return an array of recipes', async () => {
       const repoSpy = jest.spyOn(repo, 'find');
-      expect(service.findAll()).resolves.toEqual([recipe]);
+      expect(service.findAll({ skip: 0, take: 9 })).resolves.toEqual([recipe]);
       expect(repoSpy).toHaveBeenCalled();
     });
   });
@@ -53,7 +58,7 @@ describe('RecipeService', () => {
   describe('findOneById', () => {
     it('should return a recipe', async () => {
       const repoSpy = jest.spyOn(repo, 'findOne');
-      expect(service.findOneById(1)).resolves.toEqual(recipe);
+      expect(service.findOneById({ id: 1 })).resolves.toEqual(recipe);
       expect(repoSpy).toHaveBeenCalled();
     });
   });
