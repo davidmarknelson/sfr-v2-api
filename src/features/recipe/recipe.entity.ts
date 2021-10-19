@@ -25,6 +25,8 @@ export class RecipeEntity {
   @Column({ type: 'enum', enum: Difficulty })
   difficulty: number;
 
-  @OneToOne(() => RecipePhotoEntity, (recipePhoto) => recipePhoto.recipe)
+  @OneToOne(() => RecipePhotoEntity, (recipePhoto) => recipePhoto.recipe, {
+    nullable: true,
+  })
   photo: RecipePhotoEntity;
 }

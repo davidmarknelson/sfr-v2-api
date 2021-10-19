@@ -24,6 +24,6 @@ export class RecipeType {
   @Field(() => Int)
   difficulty: number;
 
-  @Field(() => RecipePhotoType)
+  @Field(() => RecipePhotoType, { nullable: true })
   photo: RecipePhotoType;
 }
