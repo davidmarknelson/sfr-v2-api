@@ -12,8 +12,10 @@ export class RecipeService {
     private recipeRepository: Repository<RecipeEntity>,
   ) {}
 
-  findAll(@Args() paginationArgs: PaginationArgs): Promise<RecipeEntity[]> {
-    return this.recipeRepository.find(paginationArgs);
+  findAllAndCount(
+    @Args() paginationArgs: PaginationArgs,
+  ): Promise<[RecipeEntity[], number]> {
+    return this.recipeRepository.findAndCount(paginationArgs);
   }
 
   findOneById(@Args() idArgs: IdArgs): Promise<RecipeEntity> {
