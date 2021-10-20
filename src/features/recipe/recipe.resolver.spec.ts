@@ -1,6 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Difficulty, RecipeType } from './models';
+import { Difficulty, RecipesAndCountType, RecipeType } from './models';
 import { RecipeResolver } from './recipe.resolver';
 import { RecipeService } from './recipe.service';
 
@@ -29,7 +29,7 @@ describe('RecipeResolver', () => {
         {
           provide: RecipeService,
           useValue: {
-            findAll: jest.fn().mockResolvedValue([recipe]),
+            findAllAndCount: jest.fn().mockResolvedValue([[recipe], 1]),
             findOneById: jest.fn().mockResolvedValue(recipe),
           },
         },
@@ -44,10 +44,16 @@ describe('RecipeResolver', () => {
     expect(resolver).toBeDefined();
   });
 
-  describe('recipes', () => {
-    it('should return an array of recipes', () => {
-      const serviceSpy = jest.spyOn(service, 'findAll');
-      expect(resolver.recipes({ skip: 0, take: 9 })).resolves.toEqual([recipe]);
+  describe('recipesAndCount', () => {
+    it('should return an array of recipes and the total count', () => {
+      const recipesAndCount: RecipesAndCountType = {
+        totalCount: 1,
+        recipes: [recipe],
+      };
+      const serviceSpy = jest.spyOn(service, 'findAllAndCount');
+      expect(resolver.recipesAndCount({ skip: 0, take: 9 })).resolves.toEqual(
+        recipesAndCount,
+      );
       expect(serviceSpy).toHaveBeenCalled();
     });
   });

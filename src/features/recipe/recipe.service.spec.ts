@@ -29,7 +29,7 @@ describe('RecipeService', () => {
         {
           provide: getRepositoryToken(RecipeEntity),
           useValue: {
-            find: jest.fn().mockResolvedValue([recipe]),
+            findAndCount: jest.fn().mockResolvedValue([[recipe], 1]),
             findOne: jest.fn().mockResolvedValue(recipe),
           },
         },
@@ -47,10 +47,13 @@ describe('RecipeService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('findAll', () => {
+  describe('findAllAndCount', () => {
     it('should return an array of recipes', async () => {
-      const repoSpy = jest.spyOn(repo, 'find');
-      expect(service.findAll({ skip: 0, take: 9 })).resolves.toEqual([recipe]);
+      const repoSpy = jest.spyOn(repo, 'findAndCount');
+      expect(service.findAllAndCount({ skip: 0, take: 9 })).resolves.toEqual([
+        [recipe],
+        1,
+      ]);
       expect(repoSpy).toHaveBeenCalled();
     });
   });
