@@ -25,7 +25,7 @@ import { ApiTestingModule } from './testing/testing.module';
       password: process.env.PSQL_PASSWORD,
       database: process.env.PSQL_DATABASE,
       synchronize: !!+process.env.TYPEORM_SYNCRONIZE,
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      autoLoadEntities: true,
     }),
     RecipeModule,
     RecipePhotoModule,
