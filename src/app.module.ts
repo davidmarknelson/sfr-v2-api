@@ -24,7 +24,7 @@ import { ApiTestingModule } from './testing/testing.module';
       username: process.env.PSQL_USERNAME,
       password: process.env.PSQL_PASSWORD,
       database: process.env.PSQL_DATABASE,
-      synchronize: !!process.env.TYPEORM_SYNCRONIZE,
+      synchronize: !!+process.env.TYPEORM_SYNCRONIZE,
       autoLoadEntities: true,
     }),
     RecipeModule,
