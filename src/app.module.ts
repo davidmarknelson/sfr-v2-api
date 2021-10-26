@@ -26,12 +26,7 @@ import { ApiTestingModule } from './testing/testing.module';
       database: process.env.TYPEORM_DATABASE,
       synchronize: !!+process.env.TYPEORM_SYNCRONIZE,
       autoLoadEntities: true,
-      ssl:
-        process.env.ENVIRONMENT === 'Production'
-          ? {
-              rejectUnauthorized: false,
-            }
-          : false,
+      ssl: process.env.NODE_ENV === 'production',
     }),
     RecipeModule,
     RecipePhotoModule,
