@@ -98,6 +98,7 @@ describe('RecipesResolver (e2e)', () => {
         .expect(200)
         .then((data) => {
           expect(data.body.data.recipesAndCount.recipes.length).toEqual(3);
+          expect(data.body.data.recipesAndCount.totalCount).toEqual(3);
         });
     });
   });
