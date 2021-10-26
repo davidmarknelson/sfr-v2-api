@@ -10,6 +10,10 @@ import { ApiTestingModule } from './testing/testing.module';
     GraphQLModule.forRoot({
       autoSchemaFile: true,
       sortSchema: true,
+      cors: {
+        origin: 'http://localhost:4200',
+        credentials: true,
+      },
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
