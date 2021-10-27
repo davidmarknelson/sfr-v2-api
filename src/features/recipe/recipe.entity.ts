@@ -1,4 +1,10 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { RecipePhotoEntity } from '../recipe-photo/recipe-photo.entity';
 import { Difficulty } from './models';
 
@@ -28,5 +34,6 @@ export class RecipeEntity {
   @OneToOne(() => RecipePhotoEntity, (recipePhoto) => recipePhoto.recipe, {
     nullable: true,
   })
+  @JoinColumn()
   photo: RecipePhotoEntity;
 }
