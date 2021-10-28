@@ -1,7 +1,7 @@
 import { IdArgs, PaginationArgs } from '@api/data-access';
 import { NotFoundException } from '@nestjs/common';
-import { Args, Query, Resolver } from '@nestjs/graphql';
-import { RecipeType } from './models';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { RecipeInput, RecipeType } from './models';
 import { RecipesAndCountType } from './models/recipes-and-count';
 import { RecipeService } from './recipe.service';
 
@@ -26,5 +26,10 @@ export class RecipeResolver {
       throw new NotFoundException();
     }
     return recipe;
+  }
+
+  @Mutation(() => RecipeType)
+  createRecipe(@Args('recipe') recipe: RecipeInput): Promise<RecipeType> {
+    return this.recipeService.create(recipe);
   }
 }

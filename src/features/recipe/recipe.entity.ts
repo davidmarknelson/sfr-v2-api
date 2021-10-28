@@ -33,6 +33,8 @@ export class RecipeEntity {
 
   @OneToOne(() => RecipePhotoEntity, (recipePhoto) => recipePhoto.recipe, {
     nullable: true,
+    cascade: true,
+    onDelete: 'CASCADE',
   })
   @JoinColumn()
   photo: RecipePhotoEntity;
