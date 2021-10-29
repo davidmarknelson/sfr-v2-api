@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RecipeService } from './recipe.service';
-import { RecipeEntity } from './recipe.entity';
-import { RecipeResolver } from './recipe.resolver';
+import { RecipeEntity } from './entity';
+import { RecipeResolver } from './resolver';
+import { RecipeService } from './service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([RecipeEntity])],

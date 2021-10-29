@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { RecipePhotoType } from '../../recipe-photo/models';
+import { RecipePhotoType } from '../../recipe-photo/dto';
 
 @ObjectType()
 export class RecipeType {
@@ -24,6 +24,6 @@ export class RecipeType {
   @Field(() => Int)
   difficulty: number;
 
-  @Field(() => RecipePhotoType, { nullable: true })
-  photo: RecipePhotoType;
+  @Field(() => [RecipePhotoType])
+  photos: RecipePhotoType[];
 }

@@ -1,8 +1,8 @@
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Difficulty, RecipeType } from './models';
-import { RecipeEntity } from './recipe.entity';
+import { Difficulty, RecipeType } from '../dto';
+import { RecipeEntity } from '../entity';
 import { RecipeService } from './recipe.service';
 
 const recipe: RecipeType = {
@@ -13,10 +13,13 @@ const recipe: RecipeType = {
   instructions: [],
   cookTime: 0,
   difficulty: Difficulty.ONE,
-  photo: {
-    id: 1,
-    path: '/recipe-photo/1',
-  },
+  photos: [
+    {
+      id: 1,
+      path: '/recipe-photo/1',
+      cloudinaryPublicId: 'someId',
+    },
+  ],
 };
 
 describe('RecipeService', () => {
@@ -31,6 +34,7 @@ describe('RecipeService', () => {
           useValue: {
             findAndCount: jest.fn().mockResolvedValue([[recipe], 1]),
             findOne: jest.fn().mockResolvedValue(recipe),
+            save: jest.fn().mockResolvedValue(recipe),
           },
         },
         RecipeService,
@@ -62,6 +66,29 @@ describe('RecipeService', () => {
     it('should return a recipe', async () => {
       const repoSpy = jest.spyOn(repo, 'findOne');
       expect(service.findOneById({ id: 1 })).resolves.toEqual(recipe);
+      expect(repoSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('create', () => {
+    it('should create and return a new recipe', async () => {
+      const repoSpy = jest.spyOn(repo, 'save');
+      expect(
+        service.create({
+          name: 'sandwich',
+          description: '',
+          ingredients: [],
+          instructions: [],
+          cookTime: 0,
+          difficulty: Difficulty.ONE,
+          photos: [
+            {
+              path: '/recipe-photo/1',
+              cloudinaryPublicId: 'someId',
+            },
+          ],
+        }),
+      ).resolves.toEqual(recipe);
       expect(repoSpy).toHaveBeenCalled();
     });
   });

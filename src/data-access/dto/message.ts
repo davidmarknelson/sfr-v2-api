@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class TestingType {
+export class MessageType {
   @Field()
   message: string;
 }

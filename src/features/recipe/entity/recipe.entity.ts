@@ -1,19 +1,13 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { RecipePhotoEntity } from '../recipe-photo/recipe-photo.entity';
-import { Difficulty } from './models';
+import { RecipePhotoEntity } from '@api/features/recipe-photo/entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Difficulty } from '../dto';
 
 @Entity('recipe')
 export class RecipeEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ length: 256 })
   name: string;
 
   @Column({ length: 512 })
@@ -31,11 +25,9 @@ export class RecipeEntity {
   @Column({ type: 'enum', enum: Difficulty })
   difficulty: number;
 
-  @OneToOne(() => RecipePhotoEntity, (recipePhoto) => recipePhoto.recipe, {
-    nullable: true,
+  @OneToMany(() => RecipePhotoEntity, (recipePhoto) => recipePhoto.recipe, {
     cascade: true,
-    onDelete: 'CASCADE',
+    nullable: true,
   })
-  @JoinColumn()
-  photo: RecipePhotoEntity;
+  photos: RecipePhotoEntity[];
 }

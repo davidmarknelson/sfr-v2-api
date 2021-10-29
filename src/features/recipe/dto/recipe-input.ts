@@ -1,4 +1,4 @@
-import { RecipePhotoInput } from '@api/features/recipe-photo/models';
+import { RecipePhotoInput } from '@api/features/recipe-photo/dto';
 import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
@@ -21,6 +21,6 @@ export class RecipeInput {
   @Field(() => Int)
   difficulty: number;
 
-  @Field(() => RecipePhotoInput, { nullable: true })
-  photo: RecipePhotoInput;
+  @Field(() => [RecipePhotoInput], { nullable: true })
+  photos: RecipePhotoInput[] | null;
 }

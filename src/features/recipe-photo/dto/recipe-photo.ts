@@ -7,4 +7,7 @@ export class RecipePhotoType {
 
   @Field()
   path: string;
+
+  @Field()
+  cloudinaryPublicId: string;
 }

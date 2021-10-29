@@ -1,8 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Difficulty, RecipesAndCountType, RecipeType } from './models';
+import { Difficulty, RecipesAndCountType, RecipeType } from '../dto';
+import { RecipeService } from '../service';
 import { RecipeResolver } from './recipe.resolver';
-import { RecipeService } from './recipe.service';
 
 const recipe: RecipeType = {
   id: 1,
@@ -12,10 +12,13 @@ const recipe: RecipeType = {
   description: '',
   cookTime: 20,
   difficulty: Difficulty.ONE,
-  photo: {
-    id: 1,
-    path: '/recipe-photo/1',
-  },
+  photos: [
+    {
+      id: 1,
+      path: '/recipe-photo/1',
+      cloudinaryPublicId: 'someId',
+    },
+  ],
 };
 
 describe('RecipeResolver', () => {
@@ -31,6 +34,7 @@ describe('RecipeResolver', () => {
           useValue: {
             findAllAndCount: jest.fn().mockResolvedValue([[recipe], 1]),
             findOneById: jest.fn().mockResolvedValue(recipe),
+            create: jest.fn().mockResolvedValue(recipe),
           },
         },
       ],
@@ -70,6 +74,29 @@ describe('RecipeResolver', () => {
       expect(resolver.recipe({ id: 1 })).rejects.toThrowError(
         NotFoundException,
       );
+    });
+  });
+
+  describe('createRecipe', () => {
+    it('should create and return a recipe', () => {
+      const serviceSpy = jest.spyOn(service, 'create');
+      expect(
+        resolver.createRecipe({
+          name: 'sandwich',
+          ingredients: [],
+          instructions: [],
+          description: '',
+          cookTime: 20,
+          difficulty: Difficulty.ONE,
+          photos: [
+            {
+              path: '/recipe-photo/1',
+              cloudinaryPublicId: 'someId',
+            },
+          ],
+        }),
+      ).resolves.toEqual(recipe);
+      expect(serviceSpy).toHaveBeenCalled();
     });
   });
 });

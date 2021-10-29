@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { NodeEnv, validate } from './env.validation';
 import { RecipePhotoModule } from './features/recipe-photo/recipe-photo.module';
 import { RecipeModule } from './features/recipe/recipe.module';
-import { ApiTestingModule } from './testing/testing.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -39,7 +38,6 @@ import { ApiTestingModule } from './testing/testing.module';
     }),
     RecipeModule,
     RecipePhotoModule,
-    ApiTestingModule,
   ],
 })
 export class AppModule {}

@@ -4,4 +4,7 @@ import { Field, InputType } from '@nestjs/graphql';
 export class RecipePhotoInput {
   @Field()
   path: string;
+
+  @Field()
+  cloudinaryPublicId: string;
 }

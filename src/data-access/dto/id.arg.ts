@@ -1,10 +1,7 @@
 import { ArgsType, Field } from '@nestjs/graphql';
 
 @ArgsType()
-export class PaginationArgs {
+export class IdArg {
   @Field()
-  skip: number;
-
-  @Field()
-  take: number;
+  id: number;
 }

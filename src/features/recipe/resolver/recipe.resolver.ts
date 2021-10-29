@@ -1,9 +1,8 @@
-import { IdArgs, PaginationArgs } from '@api/data-access';
+import { IdArg, MessageType, PaginationArg } from '@api/data-access';
 import { NotFoundException } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { RecipeInput, RecipeType } from './models';
-import { RecipesAndCountType } from './models/recipes-and-count';
-import { RecipeService } from './recipe.service';
+import { RecipeInput, RecipesAndCountType, RecipeType } from '../dto';
+import { RecipeService } from '../service';
 
 @Resolver(() => RecipeType)
 export class RecipeResolver {
@@ -11,17 +10,17 @@ export class RecipeResolver {
 
   @Query(() => RecipesAndCountType)
   async recipesAndCount(
-    @Args() paginationArgs: PaginationArgs,
+    @Args() paginationArg: PaginationArg,
   ): Promise<RecipesAndCountType> {
     const recipesAndCount = await this.recipeService.findAllAndCount(
-      paginationArgs,
+      paginationArg,
     );
     return { recipes: recipesAndCount[0], totalCount: recipesAndCount[1] };
   }
 
   @Query(() => RecipeType)
-  async recipe(@Args() idArgs: IdArgs): Promise<RecipeType> {
-    const recipe = await this.recipeService.findOneById(idArgs);
+  async recipe(@Args() idArg: IdArg): Promise<RecipeType> {
+    const recipe = await this.recipeService.findOneById(idArg);
     if (!recipe) {
       throw new NotFoundException();
     }
@@ -31,5 +30,14 @@ export class RecipeResolver {
   @Mutation(() => RecipeType)
   createRecipe(@Args('recipe') recipe: RecipeInput): Promise<RecipeType> {
     return this.recipeService.create(recipe);
+  }
+
+  @Mutation(() => MessageType)
+  async deleteRecipe(@Args() idArg: IdArg): Promise<MessageType> {
+    const deleteResult = await this.recipeService.delete(idArg);
+    if (!deleteResult.affected) {
+      new NotFoundException(`Recipe with id ${idArg.id} was not found`);
+    }
+    return { message: 'Recipe successfully deleted' };
   }
 }
