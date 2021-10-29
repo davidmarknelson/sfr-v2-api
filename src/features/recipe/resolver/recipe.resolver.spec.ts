@@ -35,6 +35,7 @@ describe('RecipeResolver', () => {
             findAllAndCount: jest.fn().mockResolvedValue([[recipe], 1]),
             findOneById: jest.fn().mockResolvedValue(recipe),
             create: jest.fn().mockResolvedValue(recipe),
+            delete: jest.fn().mockResolvedValue({ raw: [], affected: 1 }),
           },
         },
       ],
@@ -49,13 +50,13 @@ describe('RecipeResolver', () => {
   });
 
   describe('recipesAndCount', () => {
-    it('should return an array of recipes and the total count', () => {
+    it('should return an array of recipes and the total count', async () => {
       const recipesAndCount: RecipesAndCountType = {
         totalCount: 1,
         recipes: [recipe],
       };
       const serviceSpy = jest.spyOn(service, 'findAllAndCount');
-      expect(resolver.recipesAndCount({ skip: 0, take: 9 })).resolves.toEqual(
+      expect(await resolver.recipesAndCount({ skip: 0, take: 9 })).toEqual(
         recipesAndCount,
       );
       expect(serviceSpy).toHaveBeenCalled();
@@ -63,25 +64,28 @@ describe('RecipeResolver', () => {
   });
 
   describe('recipe', () => {
-    it('should return a recipe', () => {
+    it('should return a recipe', async () => {
       const serviceSpy = jest.spyOn(service, 'findOneById');
-      expect(resolver.recipe({ id: 1 })).resolves.toEqual(recipe);
+      expect(await resolver.recipe({ id: 1 })).toEqual(recipe);
       expect(serviceSpy).toHaveBeenCalled();
     });
 
-    it('should return a not found if there is no recipe', () => {
-      jest.spyOn(service, 'findOneById').mockResolvedValue(undefined);
-      expect(resolver.recipe({ id: 1 })).rejects.toThrowError(
+    it('should return a not found if there is no recipe', async () => {
+      const serviceSpy = jest
+        .spyOn(service, 'findOneById')
+        .mockResolvedValue(undefined);
+      await expect(resolver.recipe({ id: 1 })).rejects.toThrowError(
         NotFoundException,
       );
+      expect(serviceSpy).toHaveBeenCalled();
     });
   });
 
   describe('createRecipe', () => {
-    it('should create and return a recipe', () => {
+    it('should create and return a recipe', async () => {
       const serviceSpy = jest.spyOn(service, 'create');
       expect(
-        resolver.createRecipe({
+        await resolver.createRecipe({
           name: 'sandwich',
           ingredients: [],
           instructions: [],
@@ -95,7 +99,31 @@ describe('RecipeResolver', () => {
             },
           ],
         }),
-      ).resolves.toEqual(recipe);
+      ).toEqual(recipe);
+      expect(serviceSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('deleteRecipe', () => {
+    it('should delete a recipe and return a message', async () => {
+      const serviceSpy = jest.spyOn(service, 'delete');
+      expect(
+        await resolver.deleteRecipe({
+          id: 1,
+        }),
+      ).toEqual({ message: 'Recipe successfully deleted' });
+      expect(serviceSpy).toHaveBeenCalled();
+    });
+
+    it('should throw an error when the delete did not delete a row in the database', async () => {
+      const serviceSpy = jest
+        .spyOn(service, 'delete')
+        .mockResolvedValue({ raw: [], affected: 0 });
+      await expect(
+        resolver.deleteRecipe({
+          id: 1,
+        }),
+      ).rejects.toThrowError('Recipe with id 1 was not found');
       expect(serviceSpy).toHaveBeenCalled();
     });
   });

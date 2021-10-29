@@ -35,6 +35,7 @@ describe('RecipeService', () => {
             findAndCount: jest.fn().mockResolvedValue([[recipe], 1]),
             findOne: jest.fn().mockResolvedValue(recipe),
             save: jest.fn().mockResolvedValue(recipe),
+            delete: jest.fn().mockResolvedValue({ raw: [], affected: 1 }),
           },
         },
         RecipeService,
@@ -54,7 +55,7 @@ describe('RecipeService', () => {
   describe('findAllAndCount', () => {
     it('should return an array of recipes', async () => {
       const repoSpy = jest.spyOn(repo, 'findAndCount');
-      expect(service.findAllAndCount({ skip: 0, take: 9 })).resolves.toEqual([
+      expect(await service.findAllAndCount({ skip: 0, take: 9 })).toEqual([
         [recipe],
         1,
       ]);
@@ -65,7 +66,7 @@ describe('RecipeService', () => {
   describe('findOneById', () => {
     it('should return a recipe', async () => {
       const repoSpy = jest.spyOn(repo, 'findOne');
-      expect(service.findOneById({ id: 1 })).resolves.toEqual(recipe);
+      expect(await service.findOneById({ id: 1 })).toEqual(recipe);
       expect(repoSpy).toHaveBeenCalled();
     });
   });
@@ -74,7 +75,7 @@ describe('RecipeService', () => {
     it('should create and return a new recipe', async () => {
       const repoSpy = jest.spyOn(repo, 'save');
       expect(
-        service.create({
+        await service.create({
           name: 'sandwich',
           description: '',
           ingredients: [],
@@ -88,7 +89,18 @@ describe('RecipeService', () => {
             },
           ],
         }),
-      ).resolves.toEqual(recipe);
+      ).toEqual(recipe);
+      expect(repoSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('delete', () => {
+    it('should delete a recipe and return a message', async () => {
+      const repoSpy = jest.spyOn(repo, 'delete');
+      expect(await service.delete({ id: 1 })).toEqual({
+        raw: [],
+        affected: 1,
+      });
       expect(repoSpy).toHaveBeenCalled();
     });
   });

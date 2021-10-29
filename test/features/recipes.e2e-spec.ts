@@ -50,4 +50,130 @@ describe('RecipesResolver (e2e)', () => {
         });
     });
   });
+
+  describe('Create recipe', () => {
+    beforeEach(() => {
+      return Support.deleteAllRecipes(app);
+    });
+
+    it('should create a recipe without a photo', () => {
+      return request(app.getHttpServer())
+        .post(Support.graphqlEndpoint)
+        .send({
+          operationName: 'createRecipe',
+          query: `mutation createRecipe($recipe: RecipeInput!) {
+            createRecipe(recipe: $recipe) {
+              id
+              name
+              description
+              ingredients
+              instructions
+              cookTime
+              difficulty
+              photos {
+                id
+                path
+                cloudinaryPublicId
+              }
+            }
+          }`,
+          variables: {
+            recipe: {
+              name: 'Egg muffin',
+              description:
+                'An exciting new way to eat eggs. Great for breakfasts or simple lunches. This recipe yields 1 serving.',
+              ingredients: [
+                '2 large eggs',
+                '1 small slice of ham',
+                'chopped up spinach',
+                'grated mozzarella cheese',
+              ],
+              instructions: [
+                'Whisk eggs',
+                'Spray the muffin tray with oil',
+                'Pour egg mixture into muffin tray',
+                'Cut up ham into small pieces and put into the muffin tray with the eggs',
+                'Put chopped up spinach into muffin tray with the eggs',
+                'Top with cheese',
+                'Preheat the oven to 350F',
+                'Cook for 20 mins',
+                'Take it out of the tray and enjoy!',
+              ],
+              cookTime: 20,
+              difficulty: 1,
+              photos: [
+                {
+                  path: 'https://res.cloudinary.com/dcwjkxleo/image/upload/v1579036167/sfr_unsigned/dxn8zrmi9wymwfrvdx4m.jpg',
+                  cloudinaryPublicId: 'sfr_unsigned/dxn8zrmi9wymwfrvdx4m',
+                },
+              ],
+            },
+          },
+        })
+        .expect(200)
+        .then((data) => {
+          expect(data.body.data.createRecipe.name).toEqual('Egg muffin');
+          expect(data.body.data.createRecipe.ingredients).toHaveLength(4);
+          expect(data.body.data.createRecipe.photos).toHaveLength(1);
+          expect(data.body.data.createRecipe.photos[0].path).not.toEqual(null);
+        });
+    });
+
+    it('should create a recipe with a photo', () => {
+      return request(app.getHttpServer())
+        .post(Support.graphqlEndpoint)
+        .send({
+          operationName: 'createRecipe',
+          query: `mutation createRecipe($recipe: RecipeInput!) {
+            createRecipe(recipe: $recipe) {
+              id
+              name
+              description
+              ingredients
+              instructions
+              cookTime
+              difficulty
+              photos {
+                id
+                path
+                cloudinaryPublicId
+              }
+            }
+          }`,
+          variables: {
+            recipe: {
+              name: 'Egg muffin',
+              description:
+                'An exciting new way to eat eggs. Great for breakfasts or simple lunches. This recipe yields 1 serving.',
+              ingredients: [
+                '2 large eggs',
+                '1 small slice of ham',
+                'chopped up spinach',
+                'grated mozzarella cheese',
+              ],
+              instructions: [
+                'Whisk eggs',
+                'Spray the muffin tray with oil',
+                'Pour egg mixture into muffin tray',
+                'Cut up ham into small pieces and put into the muffin tray with the eggs',
+                'Put chopped up spinach into muffin tray with the eggs',
+                'Top with cheese',
+                'Preheat the oven to 350F',
+                'Cook for 20 mins',
+                'Take it out of the tray and enjoy!',
+              ],
+              cookTime: 20,
+              difficulty: 1,
+              photos: [],
+            },
+          },
+        })
+        .expect(200)
+        .then((data) => {
+          expect(data.body.data.createRecipe.name).toEqual('Egg muffin');
+          expect(data.body.data.createRecipe.ingredients).toHaveLength(4);
+          expect(data.body.data.createRecipe.photos).toEqual([]);
+        });
+    });
+  });
 });

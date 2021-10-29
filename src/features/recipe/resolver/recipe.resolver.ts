@@ -36,7 +36,7 @@ export class RecipeResolver {
   async deleteRecipe(@Args() idArg: IdArg): Promise<MessageType> {
     const deleteResult = await this.recipeService.delete(idArg);
     if (!deleteResult.affected) {
-      new NotFoundException(`Recipe with id ${idArg.id} was not found`);
+      throw new NotFoundException(`Recipe with id ${idArg.id} was not found`);
     }
     return { message: 'Recipe successfully deleted' };
   }
