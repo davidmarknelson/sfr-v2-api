@@ -1,4 +1,4 @@
-import { IdArg, PaginationArg } from '@api/data-access';
+import { IdArg, NameArg, PaginationArg } from '@api/data-access';
 import { Injectable } from '@nestjs/common';
 import { Args } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -22,8 +22,11 @@ export class RecipeService {
     });
   }
 
-  findOneById(@Args() IdArg: IdArg): Promise<RecipeEntity> {
-    return this.recipeRepository.findOne(IdArg, { relations: ['photos'] });
+  findOneByName(@Args() nameArg: NameArg): Promise<RecipeEntity> {
+    return this.recipeRepository.findOne({
+      where: { name: nameArg },
+      relations: ['photos'],
+    });
   }
 
   create(@Args() recipe: RecipeInput): Promise<RecipeType> {

@@ -76,7 +76,7 @@ export class Support {
           }`,
           variables: {
             recipe: {
-              name: 'Egg muffin',
+              name: `${i} Egg muffin`,
               description:
                 'An exciting new way to eat eggs. Great for breakfasts or simple lunches. This recipe yields 1 serving.',
               ingredients: [

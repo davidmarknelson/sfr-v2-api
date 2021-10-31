@@ -1,4 +1,5 @@
-import { IdArg, MessageType, PaginationArg } from '@api/data-access';
+import { IdArg, MessageType, NameArg, PaginationArg } from '@api/data-access';
+import { NameReplaceDashPipe } from '@api/utilities/pipe';
 import { NotFoundException } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { RecipeInput, RecipesAndCountType, RecipeType } from '../dto';
@@ -19,8 +20,10 @@ export class RecipeResolver {
   }
 
   @Query(() => RecipeType)
-  async recipe(@Args() idArg: IdArg): Promise<RecipeType> {
-    const recipe = await this.recipeService.findOneById(idArg);
+  async recipe(
+    @Args(NameReplaceDashPipe) nameArg: NameArg,
+  ): Promise<RecipeType> {
+    const recipe = await this.recipeService.findOneByName(nameArg);
     if (!recipe) {
       throw new NotFoundException();
     }

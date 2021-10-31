@@ -33,7 +33,7 @@ describe('RecipeResolver', () => {
           provide: RecipeService,
           useValue: {
             findAllAndCount: jest.fn().mockResolvedValue([[recipe], 1]),
-            findOneById: jest.fn().mockResolvedValue(recipe),
+            findOneByName: jest.fn().mockResolvedValue(recipe),
             create: jest.fn().mockResolvedValue(recipe),
             delete: jest.fn().mockResolvedValue({ raw: [], affected: 1 }),
           },
@@ -65,18 +65,18 @@ describe('RecipeResolver', () => {
 
   describe('recipe', () => {
     it('should return a recipe', async () => {
-      const serviceSpy = jest.spyOn(service, 'findOneById');
-      expect(await resolver.recipe({ id: 1 })).toEqual(recipe);
+      const serviceSpy = jest.spyOn(service, 'findOneByName');
+      expect(await resolver.recipe({ name: 'Egg-muffin' })).toEqual(recipe);
       expect(serviceSpy).toHaveBeenCalled();
     });
 
     it('should return a not found if there is no recipe', async () => {
       const serviceSpy = jest
-        .spyOn(service, 'findOneById')
+        .spyOn(service, 'findOneByName')
         .mockResolvedValue(undefined);
-      await expect(resolver.recipe({ id: 1 })).rejects.toThrowError(
-        NotFoundException,
-      );
+      await expect(
+        resolver.recipe({ name: 'Egg-muffin' }),
+      ).rejects.toThrowError(NotFoundException);
       expect(serviceSpy).toHaveBeenCalled();
     });
   });

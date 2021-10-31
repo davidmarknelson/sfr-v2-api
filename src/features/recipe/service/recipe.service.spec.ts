@@ -63,10 +63,12 @@ describe('RecipeService', () => {
     });
   });
 
-  describe('findOneById', () => {
+  describe('findOneByName', () => {
     it('should return a recipe', async () => {
       const repoSpy = jest.spyOn(repo, 'findOne');
-      expect(await service.findOneById({ id: 1 })).toEqual(recipe);
+      expect(await service.findOneByName({ name: 'Egg muffin' })).toEqual(
+        recipe,
+      );
       expect(repoSpy).toHaveBeenCalled();
     });
   });

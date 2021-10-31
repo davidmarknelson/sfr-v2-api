@@ -7,7 +7,7 @@ export class RecipeEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 256 })
+  @Column({ length: 256, unique: true })
   name: string;
 
   @Column({ length: 512 })
