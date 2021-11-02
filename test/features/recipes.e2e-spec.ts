@@ -68,6 +68,18 @@ describe('RecipesResolver (e2e)', () => {
           expect(data.body.data.recipe.name).toEqual('Egg muffin');
         });
     });
+
+    it('should return an error if there is not a matching recipe', () => {
+      return request(app.getHttpServer())
+        .post(QueriesAndMutations.graphqlEndpoint)
+        .send(QueriesAndMutations.recipeQuery('Not a recipe'))
+        .expect(200)
+        .then((data) => {
+          expect(data.body.errors).toHaveLength(1);
+          expect(data.body.errors[0].message).toEqual('Not Found');
+          expect(data.body.data).toEqual(null);
+        });
+    });
   });
 
   describe('Create recipe', () => {
