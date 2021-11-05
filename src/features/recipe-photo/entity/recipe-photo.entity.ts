@@ -6,10 +6,10 @@ export class RecipePhotoEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   path: string;
 
-  @Column()
+  @Column({ unique: true })
   cloudinaryPublicId: string;
 
   @ManyToOne(() => RecipeEntity, (recipe) => recipe.photos, {
