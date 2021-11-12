@@ -20,7 +20,6 @@ export class AuthService {
     const user = await this.userService.findOneByEmail({
       email: loginArg.email,
     });
-    console.log('user', user);
     if (user && (await compare(loginArg.password, user.password))) {
       return user;
     }
