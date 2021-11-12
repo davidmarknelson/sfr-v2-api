@@ -1,4 +1,4 @@
-import { NameArg } from '@api/data-access';
+import { NameArg } from '@api/data-access/dto';
 import { Injectable, PipeTransform } from '@nestjs/common';
 import { Args } from '@nestjs/graphql';
 

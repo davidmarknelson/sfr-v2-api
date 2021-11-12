@@ -1,11 +1,17 @@
-import { IdArg, MessageType, NameArg, PaginationArg } from '@api/data-access';
+import {
+  IdArg,
+  MessageType,
+  NameArg,
+  PaginationArg,
+} from '@api/data-access/dto';
+import { JwtAuthGuard } from '@api/features/auth/guards';
 import { NameReplaceDashPipe } from '@api/utilities/pipe';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { RecipeInput, RecipesAndCountType, RecipeType } from '../dto';
 import { RecipeService } from '../service';
 
-@Resolver(() => RecipeType)
+@Resolver()
 export class RecipeResolver {
   constructor(private recipeService: RecipeService) {}
 
@@ -30,11 +36,13 @@ export class RecipeResolver {
     return recipe;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => RecipeType)
   createRecipe(@Args('recipe') recipe: RecipeInput): Promise<RecipeType> {
     return this.recipeService.create(recipe);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => MessageType)
   async deleteRecipe(@Args() idArg: IdArg): Promise<MessageType> {
     const deleteResult = await this.recipeService.delete(idArg);

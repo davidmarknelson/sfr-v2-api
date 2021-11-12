@@ -1,4 +1,4 @@
-import { IdArg, NameArg, PaginationArg } from '@api/data-access';
+import { IdArg, NameArg, PaginationArg } from '@api/data-access/dto';
 import { Injectable } from '@nestjs/common';
 import { Args } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';

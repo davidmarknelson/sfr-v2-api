@@ -29,6 +29,8 @@ class EnvironmentVariables {
 
   @IsBoolean()
   TYPEORM_SYNCRONIZE: boolean;
+
+  JWT_SECRET: string;
 }
 
 export function validate(config: Record<string, unknown>) {
