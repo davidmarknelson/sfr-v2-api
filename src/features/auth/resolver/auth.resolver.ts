@@ -29,7 +29,7 @@ export class AuthResolver {
   @Mutation(() => AccessTokenType)
   async signup(@Args('user') user: UserInput): Promise<AccessTokenType> {
     const passwordHash = await this.authService.createPasswordHash(user);
-    const newUser = await this.userService.createUser({
+    const newUser = await this.userService.create({
       ...user,
       password: passwordHash,
     });

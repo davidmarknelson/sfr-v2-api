@@ -19,7 +19,7 @@ export class UserService {
     });
   }
 
-  createUser(@Args('user') user: UserInput): Promise<UserEntity> {
+  create(@Args('user') user: UserInput): Promise<UserEntity> {
     return this.userRepository.save(user);
   }
 }
