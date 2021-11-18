@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 import { Args } from '@nestjs/graphql';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcrypt';
-import { AccessTokenType } from '../dto';
+import { AccessTokenPayloadType, AccessTokenType } from '../dto';
 
 @Injectable()
 export class AuthService {
@@ -25,8 +25,9 @@ export class AuthService {
     return null;
   }
 
-  async signToken(@Args() user: UserEntity): Promise<AccessTokenType> {
-    const payload = { username: user.username, sub: user.id };
+  async signToken(
+    @Args() payload: AccessTokenPayloadType,
+  ): Promise<AccessTokenType> {
     return {
       accessToken: this.jwtService.sign(payload),
     };

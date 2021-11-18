@@ -25,6 +25,20 @@ export class AuthQueriesAndMutations {
     };
   }
 
+  static refreshTokenQuery(): {
+    operationName: string;
+    query: string;
+  } {
+    return {
+      operationName: 'refreshToken',
+      query: `query refreshToken {
+        refreshToken {
+          accessToken
+        }
+      }`,
+    };
+  }
+
   static signupMutation(
     email: string,
     password: string,

@@ -153,4 +153,35 @@ describe('AuthResolver (e2e)', () => {
         });
     });
   });
+
+  describe('Refresh', () => {
+    let token: string;
+
+    beforeEach(async () => {
+      await getConnection().synchronize(true);
+      await Support.createUser(app);
+      await request(app.getHttpServer())
+        .post(AuthQueriesAndMutations.graphqlEndpoint)
+        .send(
+          AuthQueriesAndMutations.loginQuery('email@email.com', 'password1234'),
+        )
+        .then((res) => {
+          token = res.body.data.login.accessToken;
+        });
+    });
+
+    it('should return an access token', () => {
+      return request(app.getHttpServer())
+        .post(AuthQueriesAndMutations.graphqlEndpoint)
+        .set('Authorization', 'Bearer ' + token)
+        .send(AuthQueriesAndMutations.refreshTokenQuery())
+        .expect(200)
+        .then((res) => {
+          expect(res.body.data.refreshToken).toHaveProperty('accessToken');
+          expect(typeof res.body.data.refreshToken.accessToken).toEqual(
+            'string',
+          );
+        });
+    });
+  });
 });

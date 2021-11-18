@@ -87,7 +87,7 @@ describe('AuthResolver', () => {
 
   describe('signup', () => {
     it('should return an access token', async () => {
-      const authPasswordHashSpy = jest.spyOn(authService, 'signToken');
+      const authPasswordHashSpy = jest.spyOn(authService, 'createPasswordHash');
       const authSignTokenSpy = jest.spyOn(authService, 'signToken');
       const userCreateSpy = jest.spyOn(userService, 'create');
       expect(
@@ -100,6 +100,19 @@ describe('AuthResolver', () => {
       expect(authPasswordHashSpy).toHaveBeenCalled();
       expect(authSignTokenSpy).toHaveBeenCalled();
       expect(userCreateSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('refreshToken', () => {
+    it('should return an access token', async () => {
+      const authSignTokenSpy = jest.spyOn(authService, 'signToken');
+      expect(
+        await resolver.refreshToken({
+          username: 'some-username',
+          sub: 1,
+        }),
+      ).toEqual(accessToken);
+      expect(authSignTokenSpy).toHaveBeenCalled();
     });
   });
 });

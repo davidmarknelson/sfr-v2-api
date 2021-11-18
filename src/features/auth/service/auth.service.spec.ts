@@ -82,7 +82,9 @@ describe('AuthService', () => {
 
   describe('signToken', () => {
     it('should return an access token', async () => {
-      expect(await service.signToken(userData)).toEqual({
+      expect(
+        await service.signToken({ username: 'some-user', sub: 1 }),
+      ).toEqual({
         accessToken: 'accessToken',
       });
     });

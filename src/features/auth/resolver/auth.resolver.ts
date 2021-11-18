@@ -1,10 +1,16 @@
 import { PsqlError } from '@api/data-access/constants';
 import { LoginArg } from '@api/data-access/dto';
+import { DecodedJwt } from '@api/features/auth/decorators';
 import { UserInput } from '@api/features/user/dto';
 import { UserService } from '@api/features/user/service';
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { AccessTokenType } from '../dto';
+import { AccessTokenPayloadType, AccessTokenType } from '../dto';
+import { JwtAuthGuard } from '../guards';
 import { AuthService } from '../service';
 
 @Resolver()
@@ -20,7 +26,18 @@ export class AuthResolver {
     if (!user) {
       throw new UnauthorizedException('Email or password is incorrect');
     }
-    return this.authService.signToken(user);
+    return this.authService.signToken({
+      username: user.username,
+      sub: user.id,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Query(() => AccessTokenType)
+  async refreshToken(
+    @DecodedJwt() decodedJwt: AccessTokenPayloadType,
+  ): Promise<AccessTokenType> {
+    return this.authService.signToken(decodedJwt);
   }
 
   @Mutation(() => AccessTokenType)
@@ -31,7 +48,10 @@ export class AuthResolver {
         ...user,
         password: passwordHash,
       });
-      return this.authService.signToken(newUser);
+      return this.authService.signToken({
+        username: newUser.username,
+        sub: newUser.id,
+      });
     } catch (err) {
       if (
         err.code === PsqlError.UNIQUE &&

@@ -91,7 +91,7 @@ describe('RecipesResolver (e2e)', () => {
       await getConnection().synchronize(true);
       await Support.createUser(app);
       await request(app.getHttpServer())
-        .post(RecipeQueriesAndMutations.graphqlEndpoint)
+        .post(AuthQueriesAndMutations.graphqlEndpoint)
         .send(
           AuthQueriesAndMutations.loginQuery('email@email.com', 'password1234'),
         )
