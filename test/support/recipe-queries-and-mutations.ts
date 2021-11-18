@@ -1,6 +1,6 @@
 import { RecipeInput } from '@api/features/recipe/dto';
 
-export class QueriesAndMutations {
+export class RecipeQueriesAndMutations {
   static graphqlEndpoint = '/graphql';
   static allRecipesQuery(
     skip = 0,

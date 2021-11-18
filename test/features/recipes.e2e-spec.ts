@@ -3,7 +3,11 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { getConnection } from 'typeorm';
-import { QueriesAndMutations, Support } from '../support';
+import {
+  AuthQueriesAndMutations,
+  RecipeQueriesAndMutations,
+  Support,
+} from '../support';
 
 describe('RecipesResolver (e2e)', () => {
   let app: INestApplication;
@@ -22,28 +26,28 @@ describe('RecipesResolver (e2e)', () => {
   });
 
   describe('No recipes', () => {
-    beforeEach(() => {
-      return getConnection().synchronize(true);
+    beforeEach(async () => {
+      await getConnection().synchronize(true);
     });
 
     it('should return an empty array and the correct count (0)', () => {
       return request(app.getHttpServer())
-        .post(QueriesAndMutations.graphqlEndpoint)
-        .send(QueriesAndMutations.allRecipesQuery())
+        .post(RecipeQueriesAndMutations.graphqlEndpoint)
+        .send(RecipeQueriesAndMutations.allRecipesQuery())
         .expect(200)
         .expect({ data: { recipesAndCount: { recipes: [], totalCount: 0 } } });
     });
   });
 
   describe('Multiple recipes', () => {
-    beforeEach(() => {
-      return Support.createRecipes();
+    beforeEach(async () => {
+      await Support.createRecipes();
     });
 
     it('should return an array and the correct count (8)', () => {
       return request(app.getHttpServer())
-        .post(QueriesAndMutations.graphqlEndpoint)
-        .send(QueriesAndMutations.allRecipesQuery())
+        .post(RecipeQueriesAndMutations.graphqlEndpoint)
+        .send(RecipeQueriesAndMutations.allRecipesQuery())
         .expect(200)
         .then((data) => {
           expect(data.body.data.recipesAndCount.recipes.length).toEqual(8);
@@ -55,14 +59,13 @@ describe('RecipesResolver (e2e)', () => {
   describe('Individual recipe', () => {
     beforeEach(async () => {
       await getConnection().synchronize(true);
-
       await Support.createRecipes();
     });
 
     it('should return a recipe', () => {
       return request(app.getHttpServer())
-        .post(QueriesAndMutations.graphqlEndpoint)
-        .send(QueriesAndMutations.recipeQuery('Egg-muffin'))
+        .post(RecipeQueriesAndMutations.graphqlEndpoint)
+        .send(RecipeQueriesAndMutations.recipeQuery('Egg-muffin'))
         .expect(200)
         .then((data) => {
           expect(data.body.data.recipe.name).toEqual('Egg muffin');
@@ -71,8 +74,8 @@ describe('RecipesResolver (e2e)', () => {
 
     it('should return an error if there is not a matching recipe', () => {
       return request(app.getHttpServer())
-        .post(QueriesAndMutations.graphqlEndpoint)
-        .send(QueriesAndMutations.recipeQuery('Not a recipe'))
+        .post(RecipeQueriesAndMutations.graphqlEndpoint)
+        .send(RecipeQueriesAndMutations.recipeQuery('Not a recipe'))
         .expect(200)
         .then((data) => {
           expect(data.body.errors).toHaveLength(1);
@@ -83,15 +86,26 @@ describe('RecipesResolver (e2e)', () => {
   });
 
   describe('Create recipe', () => {
-    beforeEach(() => {
-      return getConnection().synchronize(true);
+    let token: string;
+    beforeEach(async () => {
+      await getConnection().synchronize(true);
+      await Support.createUser(app);
+      await request(app.getHttpServer())
+        .post(RecipeQueriesAndMutations.graphqlEndpoint)
+        .send(
+          AuthQueriesAndMutations.loginQuery('email@email.com', 'password1234'),
+        )
+        .then((res) => {
+          token = res.body.data.login.accessToken;
+        });
     });
 
-    it('should create a recipe with a photo', () => {
+    it('should create a recipe with a photo', async () => {
       return request(app.getHttpServer())
-        .post(QueriesAndMutations.graphqlEndpoint)
+        .post(RecipeQueriesAndMutations.graphqlEndpoint)
+        .set('Authorization', 'Bearer ' + token)
         .send(
-          QueriesAndMutations.recipeCreateMutation({
+          RecipeQueriesAndMutations.recipeCreateMutation({
             name: 'New Recipe with photo',
             description: 'Description of recipe',
             ingredients: ['2 large eggs', '1 small slice of ham'],
@@ -119,9 +133,10 @@ describe('RecipesResolver (e2e)', () => {
 
     it('should create a recipe without a photo', () => {
       return request(app.getHttpServer())
-        .post(QueriesAndMutations.graphqlEndpoint)
+        .post(RecipeQueriesAndMutations.graphqlEndpoint)
+        .set('Authorization', 'Bearer ' + token)
         .send(
-          QueriesAndMutations.recipeCreateMutation({
+          RecipeQueriesAndMutations.recipeCreateMutation({
             name: 'New Recipe without photo',
             description: 'Description of recipe',
             ingredients: ['2 large eggs', '1 small slice of ham'],

@@ -1,2 +1,3 @@
+export * from './auth-queries-and-mutations';
 export * from './commands';
-export * from './queries-and-mutations';
+export * from './recipe-queries-and-mutations';

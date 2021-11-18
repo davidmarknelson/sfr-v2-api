@@ -1,5 +1,4 @@
 import { LoginArg } from '@api/data-access/dto';
-import { CurrentUser } from '@api/features/user/decorator';
 import { UserInput } from '@api/features/user/dto';
 import { UserEntity } from '@api/features/user/entity';
 import { UserService } from '@api/features/user/service';
@@ -26,14 +25,14 @@ export class AuthService {
     return null;
   }
 
-  async signToken(@CurrentUser() user: UserEntity): Promise<AccessTokenType> {
+  async signToken(@Args() user: UserEntity): Promise<AccessTokenType> {
     const payload = { username: user.username, sub: user.id };
     return {
       accessToken: this.jwtService.sign(payload),
     };
   }
 
-  createPasswordHash(@Args('user') user: UserInput): Promise<string> {
+  createPasswordHash(@Args() user: UserInput): Promise<string> {
     return hash(user.password, 10);
   }
 }

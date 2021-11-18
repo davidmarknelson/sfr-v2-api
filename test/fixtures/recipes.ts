@@ -1,5 +1,7 @@
+import { RecipeInput } from '@api/features/recipe/dto';
+
 export class Recipes {
-  static recipes = [
+  static recipes: RecipeInput[] = [
     {
       name: 'Egg muffin',
       description:
