@@ -94,7 +94,7 @@ describe('RecipesResolver (e2e)', () => {
       await request(app.getHttpServer())
         .post(AuthQueriesAndMutations.graphqlEndpoint)
         .send(
-          AuthQueriesAndMutations.loginQuery('email@email.com', 'password1234'),
+          AuthQueriesAndMutations.loginQuery('email@email.com', 'password!234'),
         )
         .then((res) => {
           token = res.body.data.login.accessToken;

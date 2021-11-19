@@ -1,5 +1,5 @@
 import { AppModule } from '@api/app.module';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { getConnection } from 'typeorm';
@@ -14,6 +14,12 @@ describe('AuthResolver (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(
+      new ValidationPipe({
+        transform: true,
+      }),
+    );
+
     await app.init();
   });
 
@@ -32,7 +38,7 @@ describe('AuthResolver (e2e)', () => {
         .send(
           AuthQueriesAndMutations.signupMutation(
             'email@email.com',
-            'password1234',
+            'password!234',
             'some-user',
           ),
         )
@@ -50,14 +56,14 @@ describe('AuthResolver (e2e)', () => {
           .send(
             AuthQueriesAndMutations.signupMutation(
               'email@email.com',
-              'password1234',
+              'password!234',
               'some-new-user',
             ),
           )
           .expect(200)
           .then((res) => {
             expect(res.body.data).toEqual(null);
-            expect(res.body.errors[0].message).toEqual(
+            expect(res.body.errors[0].extensions.response.message).toEqual(
               'An account with this email or username already exists',
             );
             expect(res.body.errors[0].extensions.response.statusCode).toEqual(
@@ -74,14 +80,14 @@ describe('AuthResolver (e2e)', () => {
           .send(
             AuthQueriesAndMutations.signupMutation(
               'new-email@email.com',
-              'password1234',
+              'password!234',
               'some-user',
             ),
           )
           .expect(200)
           .then((res) => {
             expect(res.body.data).toEqual(null);
-            expect(res.body.errors[0].message).toEqual(
+            expect(res.body.errors[0].extensions.response.message).toEqual(
               'An account with this email or username already exists',
             );
             expect(res.body.errors[0].extensions.response.statusCode).toEqual(
@@ -89,6 +95,183 @@ describe('AuthResolver (e2e)', () => {
             );
           }),
       );
+    });
+
+    it('should return an error if the email is not an email', () => {
+      return request(app.getHttpServer())
+        .post(AuthQueriesAndMutations.graphqlEndpoint)
+        .send(
+          AuthQueriesAndMutations.signupMutation(
+            'notAnEmail',
+            'password!234',
+            'some-user',
+          ),
+        )
+        .expect(200)
+        .then((res) => {
+          expect(res.body.data).toEqual(null);
+          expect(res.body.errors[0].extensions.response.message).toEqual([
+            'Email must be an email',
+          ]);
+          expect(res.body.errors[0].extensions.response.statusCode).toEqual(
+            400,
+          );
+        });
+    });
+
+    it('should return an error if the username is too short', () => {
+      return request(app.getHttpServer())
+        .post(AuthQueriesAndMutations.graphqlEndpoint)
+        .send(
+          AuthQueriesAndMutations.signupMutation(
+            'email@email.com',
+            'password!234',
+            'asdf',
+          ),
+        )
+        .expect(200)
+        .then((res) => {
+          expect(res.body.data).toEqual(null);
+          console.log(res.body.errors[0].extensions.response.message);
+          expect(res.body.errors[0].extensions.response.message).toEqual([
+            'Username must be between 5 and 25 characters long',
+          ]);
+          expect(res.body.errors[0].extensions.response.statusCode).toEqual(
+            400,
+          );
+        });
+    });
+
+    it('should return an error if the username is too long', () => {
+      return request(app.getHttpServer())
+        .post(AuthQueriesAndMutations.graphqlEndpoint)
+        .send(
+          AuthQueriesAndMutations.signupMutation(
+            'email@email.com',
+            'password!234',
+            'asdfasdfasdfasdfasdfasdfasdf',
+          ),
+        )
+        .expect(200)
+        .then((res) => {
+          expect(res.body.data).toEqual(null);
+          expect(res.body.errors[0].extensions.response.message).toEqual([
+            'Username must be between 5 and 25 characters long',
+          ]);
+          expect(res.body.errors[0].extensions.response.statusCode).toEqual(
+            400,
+          );
+        });
+    });
+
+    it('should return an error if the username contains a space', () => {
+      return request(app.getHttpServer())
+        .post(AuthQueriesAndMutations.graphqlEndpoint)
+        .send(
+          AuthQueriesAndMutations.signupMutation(
+            'email@email.com',
+            'password!234',
+            'some user',
+          ),
+        )
+        .expect(200)
+        .then((res) => {
+          expect(res.body.data).toEqual(null);
+          expect(res.body.errors[0].extensions.response.message).toEqual([
+            'Username must not contain a space',
+          ]);
+          expect(res.body.errors[0].extensions.response.statusCode).toEqual(
+            400,
+          );
+        });
+    });
+
+    it('should return an error if the password is fewer than 12 characters long', () => {
+      return request(app.getHttpServer())
+        .post(AuthQueriesAndMutations.graphqlEndpoint)
+        .send(
+          AuthQueriesAndMutations.signupMutation(
+            'email@email.com',
+            'password!23',
+            'some-user',
+          ),
+        )
+        .expect(200)
+        .then((res) => {
+          expect(res.body.data).toEqual(null);
+          expect(res.body.errors[0].extensions.response.message).toEqual([
+            'Password must contain a letter, a number, a special character, and be at least 12 characters long',
+          ]);
+          expect(res.body.errors[0].extensions.response.statusCode).toEqual(
+            400,
+          );
+        });
+    });
+
+    it('should return an error if the password does not contain a special character', () => {
+      return request(app.getHttpServer())
+        .post(AuthQueriesAndMutations.graphqlEndpoint)
+        .send(
+          AuthQueriesAndMutations.signupMutation(
+            'email@email.com',
+            'password1234',
+            'some-user',
+          ),
+        )
+        .expect(200)
+        .then((res) => {
+          expect(res.body.data).toEqual(null);
+          expect(res.body.errors[0].extensions.response.message).toEqual([
+            'Password must contain a letter, a number, a special character, and be at least 12 characters long',
+          ]);
+          expect(res.body.errors[0].extensions.response.statusCode).toEqual(
+            400,
+          );
+        });
+    });
+
+    it('should return an error if the password does not contain a letter', () => {
+      return request(app.getHttpServer())
+        .post(AuthQueriesAndMutations.graphqlEndpoint)
+        .send(
+          AuthQueriesAndMutations.signupMutation(
+            'email@email.com',
+            '12341234!234',
+            'some-user',
+          ),
+        )
+        .expect(200)
+        .then((res) => {
+          expect(res.body.data).toEqual(null);
+          expect(res.body.errors[0].extensions.response.message).toEqual([
+            'Password must contain a letter, a number, a special character, and be at least 12 characters long',
+          ]);
+          expect(res.body.errors[0].extensions.response.statusCode).toEqual(
+            400,
+          );
+        });
+    });
+
+    it('should return an error if the password does not contain a number', () => {
+      return request(app.getHttpServer())
+        .post(AuthQueriesAndMutations.graphqlEndpoint)
+        .send(
+          AuthQueriesAndMutations.signupMutation(
+            'email@email.com',
+            'password!asd',
+            'some-user',
+          ),
+        )
+        .expect(200)
+        .then((res) => {
+          expect(res.body.data).toEqual(null);
+          expect(res.body.errors[0].extensions.response.message).toEqual([
+            'Password must contain a letter, a number, a special character, and be at least 12 characters long',
+          ]);
+          expect(res.body.errors[0].extensions.response.statusCode).toEqual(
+            400,
+          );
+        });
     });
   });
 
@@ -102,7 +285,7 @@ describe('AuthResolver (e2e)', () => {
       return request(app.getHttpServer())
         .post(AuthQueriesAndMutations.graphqlEndpoint)
         .send(
-          AuthQueriesAndMutations.loginQuery('email@email.com', 'password1234'),
+          AuthQueriesAndMutations.loginQuery('email@email.com', 'password!234'),
         )
         .expect(200)
         .then((res) => {
@@ -123,7 +306,7 @@ describe('AuthResolver (e2e)', () => {
         .expect(200)
         .then((res) => {
           expect(res.body.data).toEqual(null);
-          expect(res.body.errors[0].message).toEqual(
+          expect(res.body.errors[0].extensions.response.message).toEqual(
             'Email or password is incorrect',
           );
           expect(res.body.errors[0].extensions.response.statusCode).toEqual(
@@ -138,13 +321,13 @@ describe('AuthResolver (e2e)', () => {
         .send(
           AuthQueriesAndMutations.loginQuery(
             'wrong-email@email.com',
-            'password1234',
+            'password!234',
           ),
         )
         .expect(200)
         .then((res) => {
           expect(res.body.data).toEqual(null);
-          expect(res.body.errors[0].message).toEqual(
+          expect(res.body.errors[0].extensions.response.message).toEqual(
             'Email or password is incorrect',
           );
           expect(res.body.errors[0].extensions.response.statusCode).toEqual(
@@ -163,7 +346,7 @@ describe('AuthResolver (e2e)', () => {
       await request(app.getHttpServer())
         .post(AuthQueriesAndMutations.graphqlEndpoint)
         .send(
-          AuthQueriesAndMutations.loginQuery('email@email.com', 'password1234'),
+          AuthQueriesAndMutations.loginQuery('email@email.com', 'password!234'),
         )
         .then((res) => {
           token = res.body.data.login.accessToken;

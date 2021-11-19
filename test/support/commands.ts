@@ -10,7 +10,7 @@ export class Support {
     await request(app.getHttpServer())
       .post(AuthQueriesAndMutations.graphqlEndpoint)
       .send(
-        AuthQueriesAndMutations.loginQuery('email@email.com', 'password1234'),
+        AuthQueriesAndMutations.loginQuery('email@email.com', 'password!234'),
       )
       .then((res) => {
         token = res.body.data.login.accessToken;
@@ -30,7 +30,7 @@ export class Support {
       .send(
         AuthQueriesAndMutations.signupMutation(
           'email@email.com',
-          'password1234',
+          'password!234',
           'some-user',
         ),
       );

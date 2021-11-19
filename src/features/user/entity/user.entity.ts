@@ -12,7 +12,7 @@ export class UserEntity {
   @Column()
   password: string;
 
-  @Column({ length: 512, unique: true })
+  @Column({ unique: true })
   email: string;
 
   @Column({ type: 'boolean', default: false })
