@@ -1,4 +1,3 @@
-export * from './difficulty.enum';
-export * from './recipe';
-export * from './recipe-input';
-export * from './recipes-and-count';
+export * from './enums';
+export * from './input-types';
+export * from './object-types';

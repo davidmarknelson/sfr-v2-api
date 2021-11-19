@@ -41,7 +41,8 @@ describe('RecipesResolver (e2e)', () => {
 
   describe('Multiple recipes', () => {
     beforeEach(async () => {
-      await Support.createRecipes();
+      await getConnection().synchronize(true);
+      await Support.createRecipes(app);
     });
 
     it('should return an array and the correct count (8)', () => {
@@ -59,7 +60,7 @@ describe('RecipesResolver (e2e)', () => {
   describe('Individual recipe', () => {
     beforeEach(async () => {
       await getConnection().synchronize(true);
-      await Support.createRecipes();
+      await Support.createRecipes(app);
     });
 
     it('should return a recipe', () => {

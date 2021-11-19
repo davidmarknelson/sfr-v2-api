@@ -1,2 +1,2 @@
-export * from './recipe-photo';
-export * from './recipe-photo-input';
+export * from './input-types';
+export * from './object-types';

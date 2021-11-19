@@ -18,19 +18,29 @@ export class RecipeService {
   ): Promise<[RecipeEntity[], number]> {
     return this.recipeRepository.findAndCount({
       ...PaginationArg,
-      relations: ['photos'],
+      relations: ['photos', 'creator'],
     });
   }
 
   findOneByName(@Args() nameArg: NameArg): Promise<RecipeEntity> {
     return this.recipeRepository.findOne({
       where: { name: nameArg },
-      relations: ['photos'],
+      relations: ['photos', 'creator'],
     });
   }
 
-  create(@Args() recipe: RecipeInput): Promise<RecipeType> {
-    return this.recipeRepository.save(recipe);
+  findOneById(@Args() idArg: IdArg): Promise<RecipeEntity> {
+    return this.recipeRepository.findOne({
+      where: idArg,
+      relations: ['creator'],
+    });
+  }
+
+  create(@Args() recipe: RecipeInput, creatorId: number): Promise<RecipeType> {
+    return this.recipeRepository.save({
+      ...recipe,
+      creator: { id: creatorId },
+    });
   }
 
   delete(@Args() IdArg: IdArg): Promise<DeleteResult> {

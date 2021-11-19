@@ -1,18 +1,28 @@
-import { RecipeEntity } from '@api/features/recipe/entity';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { getConnection, InsertResult } from 'typeorm';
-import { AuthQueriesAndMutations } from '.';
+import { AuthQueriesAndMutations, RecipeQueriesAndMutations } from '.';
 import { Recipes } from '../fixtures';
 
 export class Support {
-  static createRecipes(): Promise<InsertResult> {
-    return getConnection()
-      .createQueryBuilder()
-      .insert()
-      .into(RecipeEntity)
-      .values(Recipes.recipes)
-      .execute();
+  static async createRecipes(app: INestApplication): Promise<void> {
+    let token: string;
+    await Support.createUser(app);
+    await request(app.getHttpServer())
+      .post(AuthQueriesAndMutations.graphqlEndpoint)
+      .send(
+        AuthQueriesAndMutations.loginQuery('email@email.com', 'password1234'),
+      )
+      .then((res) => {
+        token = res.body.data.login.accessToken;
+      });
+    for (let i = 0; i < Recipes.recipes.length; i++) {
+      await request(app.getHttpServer())
+        .post(RecipeQueriesAndMutations.graphqlEndpoint)
+        .set('Authorization', 'Bearer ' + token)
+        .send(
+          RecipeQueriesAndMutations.recipeCreateMutation(Recipes.recipes[i]),
+        );
+    }
   }
   static createUser(app: INestApplication): request.Test {
     return request(app.getHttpServer())

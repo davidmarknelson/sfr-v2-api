@@ -1,5 +1,12 @@
 import { RecipePhotoEntity } from '@api/features/recipe-photo/entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { UserEntity } from '@api/features/user/entity';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Difficulty } from '../dto';
 
 @Entity('recipes')
@@ -30,4 +37,10 @@ export class RecipeEntity {
     nullable: true,
   })
   photos: RecipePhotoEntity[];
+
+  @ManyToOne(() => UserEntity, (user) => user.recipes, {
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
+  creator: UserEntity;
 }

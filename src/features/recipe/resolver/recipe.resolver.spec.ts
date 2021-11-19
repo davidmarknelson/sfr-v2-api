@@ -19,6 +19,10 @@ const recipe: RecipeType = {
       cloudinaryPublicId: 'someId',
     },
   ],
+  creator: {
+    id: 1,
+    username: 'some-user',
+  },
 };
 
 describe('RecipeResolver', () => {
@@ -85,20 +89,23 @@ describe('RecipeResolver', () => {
     it('should create and return a recipe', async () => {
       const serviceSpy = jest.spyOn(service, 'create');
       expect(
-        await resolver.createRecipe({
-          name: 'sandwich',
-          ingredients: [],
-          instructions: [],
-          description: '',
-          cookTime: 20,
-          difficulty: Difficulty.ONE,
-          photos: [
-            {
-              path: '/recipe-photo/1',
-              cloudinaryPublicId: 'someId',
-            },
-          ],
-        }),
+        await resolver.createRecipe(
+          {
+            name: 'sandwich',
+            ingredients: [],
+            instructions: [],
+            description: '',
+            cookTime: 20,
+            difficulty: Difficulty.ONE,
+            photos: [
+              {
+                path: '/recipe-photo/1',
+                cloudinaryPublicId: 'someId',
+              },
+            ],
+          },
+          { username: 'some-user', sub: 1 },
+        ),
       ).toEqual(recipe);
       expect(serviceSpy).toHaveBeenCalled();
     });

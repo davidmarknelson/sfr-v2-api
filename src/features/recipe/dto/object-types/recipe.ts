@@ -1,5 +1,6 @@
+import { RecipePhotoType } from '@api/features/recipe-photo/dto';
+import { RecipeUserType } from '@api/features/user/dto';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { RecipePhotoType } from '../../recipe-photo/dto';
 
 @ObjectType()
 export class RecipeType {
@@ -26,4 +27,7 @@ export class RecipeType {
 
   @Field(() => [RecipePhotoType])
   photos: RecipePhotoType[];
+
+  @Field(() => RecipeUserType)
+  creator: RecipeUserType;
 }

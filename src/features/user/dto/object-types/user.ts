@@ -1,3 +1,4 @@
+import { RecipeType } from '@api/features/recipe/dto';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
@@ -13,4 +14,7 @@ export class UserType {
 
   @Field(() => Boolean)
   emailVerified: boolean;
+
+  @Field(() => [RecipeType])
+  recipes?: RecipeType[];
 }
