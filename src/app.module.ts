@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NodeEnv, validate } from './env.validation';
+import { ApiTestingModule } from './features/api-testing/api-testing.module';
 import { AuthModule } from './features/auth/auth.module';
 import { RecipePhotoModule } from './features/recipe-photo/recipe-photo.module';
 import { RecipeModule } from './features/recipe/recipe.module';
@@ -42,6 +43,7 @@ import { UserModule } from './features/user/user.module';
     RecipePhotoModule,
     UserModule,
     AuthModule,
+    ApiTestingModule,
   ],
 })
 export class AppModule {}
