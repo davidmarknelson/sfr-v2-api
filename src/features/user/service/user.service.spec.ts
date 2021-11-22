@@ -9,7 +9,6 @@ const user: UserEntity = {
   username: 'user1',
   password: 'password',
   email: 'email@email.com',
-  emailVerified: false,
 };
 
 describe('UserService', () => {

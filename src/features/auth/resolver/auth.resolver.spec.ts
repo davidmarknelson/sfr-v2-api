@@ -11,7 +11,6 @@ const userEntity: UserEntity = {
   username: 'some-username',
   password: 'some-hash',
   email: 'email@email.com',
-  emailVerified: false,
 };
 
 const accessToken: AccessTokenType = {

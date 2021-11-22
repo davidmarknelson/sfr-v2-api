@@ -10,7 +10,6 @@ const userData: UserEntity = {
   username: 'user1',
   password: 'password',
   email: 'email@email.com',
-  emailVerified: false,
 };
 let user: UserEntity | null = userData;
 

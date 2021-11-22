@@ -132,7 +132,6 @@ describe('AuthResolver (e2e)', () => {
         .expect(200)
         .then((res) => {
           expect(res.body.data).toEqual(null);
-          console.log(res.body.errors[0].extensions.response.message);
           expect(res.body.errors[0].extensions.response.message).toEqual([
             'Username must be between 5 and 25 characters long',
           ]);
