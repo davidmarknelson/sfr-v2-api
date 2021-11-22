@@ -12,9 +12,6 @@ export class UserType {
   @Field()
   email: string;
 
-  @Field(() => Boolean)
-  emailVerified: boolean;
-
   @Field(() => [RecipeType])
   recipes?: RecipeType[];
 }

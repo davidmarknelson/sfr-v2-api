@@ -15,9 +15,6 @@ export class UserEntity {
   @Column({ unique: true })
   email: string;
 
-  @Column({ type: 'boolean', default: false })
-  emailVerified: boolean;
-
   @OneToMany(() => RecipeEntity, (recipe) => recipe.creator, {
     cascade: true,
     nullable: true,

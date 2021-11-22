@@ -1,6 +1,7 @@
 import { RecipePhotoType } from '@api/features/recipe-photo/dto';
 import { RecipeUserType } from '@api/features/user/dto';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Difficulty } from '../enums';
 
 @ObjectType()
 export class RecipeType {
@@ -19,11 +20,13 @@ export class RecipeType {
   @Field(() => [String])
   instructions: string[];
 
-  @Field(() => Int)
+  @Field(() => Int, {
+    description: 'Number of minutes it takes to cook the meal',
+  })
   cookTime: number;
 
-  @Field(() => Int)
-  difficulty: number;
+  @Field(() => Difficulty)
+  difficulty: Difficulty;
 
   @Field(() => [RecipePhotoType])
   photos: RecipePhotoType[];
