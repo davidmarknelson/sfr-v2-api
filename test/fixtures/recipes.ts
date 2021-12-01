@@ -24,7 +24,7 @@ export class Recipes {
         'Take it out of the tray and enjoy!',
       ],
       cookTime: 20,
-      difficulty: Difficulty.ONE,
+      difficulty: Difficulty.One,
       photos: [
         {
           path: 'https://res.cloudinary.com/dcwjkxleo/image/upload/v1579036167/sfr_unsigned/dxn8zrmi9wymwfrvdx4m.jpg',
@@ -52,7 +52,7 @@ export class Recipes {
         'Transfer hummus to dish and sprinkle with paprika. Eat with veggies or chips and enjoy!',
       ],
       cookTime: 5,
-      difficulty: Difficulty.ONE,
+      difficulty: Difficulty.One,
       photos: [
         {
           path: 'https://res.cloudinary.com/dcwjkxleo/image/upload/v1579456786/sfr_unsigned/nl37stgppixvpf1xtomh.jpg',
@@ -87,7 +87,7 @@ export class Recipes {
         'Bake in a 350 degree oven for 20-25 min. they will be done when the centers are still slightly soft but a toothpick inserted into the center of the muffin comes out clean.',
       ],
       cookTime: 20,
-      difficulty: Difficulty.ONE,
+      difficulty: Difficulty.One,
       photos: [
         {
           path: 'https://res.cloudinary.com/dcwjkxleo/image/upload/v1583115420/sfr_unsigned/mssdp7oiouqjbrf3ddqp.jpg',
@@ -122,7 +122,7 @@ export class Recipes {
         'Turn off the heat and stir in the cranberries and pecans. Mix in the baked butternut squash cubes',
       ],
       cookTime: 40,
-      difficulty: Difficulty.TWO,
+      difficulty: Difficulty.Two,
       photos: [
         {
           path: 'https://res.cloudinary.com/dcwjkxleo/image/upload/v1583356307/sfr_unsigned/vz5h3r5wfoabi9wbcvxp.jpg',
@@ -159,7 +159,7 @@ export class Recipes {
         'Bake for 50 minutes or until set through and a toothpick comes out clean',
       ],
       cookTime: 50,
-      difficulty: Difficulty.ONE,
+      difficulty: Difficulty.One,
       photos: [
         {
           path: 'https://res.cloudinary.com/dcwjkxleo/image/upload/v1583356804/sfr_unsigned/xjfbt5qxwabk9zxchhf0.jpg',
@@ -195,7 +195,7 @@ export class Recipes {
         'Serve immediately topped with the cilantro and a side of garlic butter bread',
       ],
       cookTime: 15,
-      difficulty: Difficulty.ONE,
+      difficulty: Difficulty.One,
       photos: [
         {
           path: 'https://res.cloudinary.com/dcwjkxleo/image/upload/v1583357372/sfr_unsigned/gkvtbtt2ml5irsbklc1r.jpg',
@@ -227,7 +227,7 @@ export class Recipes {
         'Add the soy sauce and green parts of the scallions and stir to combine. Serve immediately.',
       ],
       cookTime: 20,
-      difficulty: Difficulty.ONE,
+      difficulty: Difficulty.One,
       photos: [
         {
           path: 'https://res.cloudinary.com/dcwjkxleo/image/upload/v1584890900/sfr_unsigned/f0fcjgchwwx52sovknec.jpg',
@@ -265,7 +265,7 @@ export class Recipes {
         'Before serving, garnish with parmesan cheese (optional) and an extra sprinkle of pepper.',
       ],
       cookTime: 45,
-      difficulty: Difficulty.ONE,
+      difficulty: Difficulty.One,
       photos: [
         {
           path: 'https://res.cloudinary.com/dcwjkxleo/image/upload/v1584917884/sfr_unsigned/zfuh0kjvlx7curstb0le.jpg',

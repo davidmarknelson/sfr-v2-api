@@ -1,29 +1,29 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum Difficulty {
-  ONE = 'ONE',
-  TWO = 'TWO',
-  THREE = 'THREE',
-  FOUR = 'FOUR',
-  FIVE = 'FIVE',
+  One = 'One',
+  Two = 'Two',
+  Three = 'Three',
+  Four = 'Four',
+  Five = 'Five',
 }
 registerEnumType(Difficulty, {
   name: 'Difficulty',
   description: 'Levels of difficulty for a recipe',
   valuesMap: {
-    ONE: {
+    One: {
       description: 'Lowest difficulty',
     },
-    TWO: {
+    Two: {
       description: 'Second lowest difficulty',
     },
-    THREE: {
+    Three: {
       description: 'Medium difficulty',
     },
-    FOUR: {
+    Four: {
       description: 'Second highest difficulty',
     },
-    FIVE: {
+    Five: {
       description: 'Highest difficulty',
     },
   },

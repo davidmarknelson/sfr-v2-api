@@ -30,7 +30,7 @@ export class RecipeEntity {
   cookTime: number;
 
   @Column({ type: 'enum', enum: Difficulty })
-  difficulty: number;
+  difficulty: Difficulty;
 
   @OneToMany(() => RecipePhotoEntity, (recipePhoto) => recipePhoto.recipe, {
     cascade: true,
