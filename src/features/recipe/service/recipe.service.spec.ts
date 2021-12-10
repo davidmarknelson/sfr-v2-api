@@ -12,7 +12,7 @@ const recipe: RecipeType = {
   ingredients: [],
   instructions: [],
   cookTime: 0,
-  difficulty: Difficulty.ONE,
+  difficulty: Difficulty.One,
   photos: [
     {
       id: 1,
@@ -88,7 +88,7 @@ describe('RecipeService', () => {
             ingredients: [],
             instructions: [],
             cookTime: 0,
-            difficulty: Difficulty.ONE,
+            difficulty: Difficulty.One,
             photos: [
               {
                 path: '/recipe-photo/1',

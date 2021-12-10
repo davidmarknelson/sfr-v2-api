@@ -11,7 +11,7 @@ const recipe: RecipeType = {
   instructions: [],
   description: '',
   cookTime: 20,
-  difficulty: Difficulty.ONE,
+  difficulty: Difficulty.One,
   photos: [
     {
       id: 1,
@@ -96,7 +96,7 @@ describe('RecipeResolver', () => {
             instructions: [],
             description: '',
             cookTime: 20,
-            difficulty: Difficulty.ONE,
+            difficulty: Difficulty.One,
             photos: [
               {
                 path: '/recipe-photo/1',

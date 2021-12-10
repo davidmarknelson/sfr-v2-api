@@ -113,7 +113,7 @@ describe('RecipesResolver (e2e)', () => {
             ingredients: ['2 large eggs', '1 small slice of ham'],
             instructions: ['Whisk eggs', 'Spray the muffin tray with oil'],
             cookTime: 20,
-            difficulty: Difficulty.ONE,
+            difficulty: Difficulty.One,
             photos: [
               {
                 path: 'https://res.cloudinary.com/dcwjkxleo/image/upload/v1579036167/sfr_unsigned/dxn8zrmi9wymwfrvdx4m.jpg',
@@ -144,7 +144,7 @@ describe('RecipesResolver (e2e)', () => {
             ingredients: ['2 large eggs', '1 small slice of ham'],
             instructions: ['Whisk eggs', 'Spray the muffin tray with oil'],
             cookTime: 20,
-            difficulty: Difficulty.ONE,
+            difficulty: Difficulty.One,
             photos: [],
           }),
         )
