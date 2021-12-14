@@ -1,0 +1,101 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AccessTokenType {
+  accessToken: String!
+}
+
+"""Levels of difficulty for a recipe"""
+enum Difficulty {
+  """Highest difficulty"""
+  Five
+
+  """Second highest difficulty"""
+  Four
+
+  """Lowest difficulty"""
+  One
+
+  """Medium difficulty"""
+  Three
+
+  """Second lowest difficulty"""
+  Two
+}
+
+type MessageType {
+  message: String!
+}
+
+type Mutation {
+  createRecipe(recipe: RecipeInput!): RecipeType!
+  deleteRecipe(id: Float!): MessageType!
+  signup(user: UserInput!): AccessTokenType!
+  testingCreateRecipes(recipes: [RecipeInput!]!): MessageType!
+  testingResetDatabase: MessageType!
+}
+
+type Query {
+  login(email: String!, password: String!): AccessTokenType!
+  recipe(name: String!): RecipeType!
+  recipesAndCount(skip: Float!, take: Float!): RecipesAndCountType!
+  refreshToken: AccessTokenType!
+}
+
+input RecipeInput {
+  """Number of minutes it takes to cook the meal"""
+  cookTime: Int!
+  description: String!
+  difficulty: Difficulty!
+  ingredients: [String!]!
+  instructions: [String!]!
+  name: String!
+  photos: [RecipePhotoInput!]
+}
+
+input RecipePhotoInput {
+  cloudinaryPublicId: String!
+  path: String!
+}
+
+type RecipePhotoType {
+  cloudinaryPublicId: String!
+  id: Int!
+  path: String!
+}
+
+type RecipeType {
+  """Number of minutes it takes to cook the meal"""
+  cookTime: Int!
+  creator: RecipeUserType!
+  description: String!
+  difficulty: Difficulty!
+  id: Int!
+  ingredients: [String!]!
+  instructions: [String!]!
+  name: String!
+  photos: [RecipePhotoType!]!
+}
+
+type RecipeUserType {
+  id: Int!
+  username: String!
+}
+
+type RecipesAndCountType {
+  recipes: [RecipeType!]!
+  totalCount: Int!
+}
+
+input UserInput {
+  email: String!
+
+  """
+  Must contain a letter, a number, a special character, and be at least 12 characters long
+  """
+  password: String!
+
+  """Must be between 5 and 25 characters long and not contain a space"""
+  username: String!
+}
