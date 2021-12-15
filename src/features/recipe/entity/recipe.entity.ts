@@ -1,6 +1,6 @@
 import { RecipePhotoEntity } from '@api/features/recipe-photo/entity';
 import { UserEntity } from '@api/features/user/entity';
-import { recipeConstants } from '@api/utilities/constants';
+import { apiRecipeConstants } from '@api/utilities/constants';
 import {
   Column,
   Entity,
@@ -15,10 +15,10 @@ export class RecipeEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: recipeConstants.nameMaxLength, unique: true })
+  @Column({ length: apiRecipeConstants.nameMaxLength, unique: true })
   name: string;
 
-  @Column({ length: recipeConstants.descriptionMaxLength })
+  @Column({ length: apiRecipeConstants.descriptionMaxLength })
   description: string;
 
   @Column({ type: 'varchar', array: true })

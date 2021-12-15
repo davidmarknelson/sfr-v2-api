@@ -32,8 +32,6 @@ type Mutation {
   createRecipe(recipe: RecipeInput!): RecipeType!
   deleteRecipe(id: Float!): MessageType!
   signup(user: UserInput!): AccessTokenType!
-  testingCreateRecipes(recipes: [RecipeInput!]!): MessageType!
-  testingResetDatabase: MessageType!
 }
 
 type Query {

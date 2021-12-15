@@ -23,9 +23,6 @@ import { UserModule } from './features/user/user.module';
         origin: process.env.CLIENT_URL,
         credentials: true,
       },
-      definitions: {
-        enumsAsTypes: true,
-      },
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
