@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Difficulty, RecipeType } from '../dto';
+import { RecipeType } from '../dto';
 import { RecipeEntity } from '../entity';
 import { RecipeService } from './recipe.service';
 
@@ -12,7 +12,7 @@ const recipe: RecipeType = {
   ingredients: [],
   instructions: [],
   cookTime: 0,
-  difficulty: Difficulty.One,
+  difficulty: 1,
   photos: [
     {
       id: 1,
@@ -88,7 +88,7 @@ describe('RecipeService', () => {
             ingredients: [],
             instructions: [],
             cookTime: 0,
-            difficulty: Difficulty.One,
+            difficulty: 1,
             photos: [
               {
                 path: '/recipe-photo/1',

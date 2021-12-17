@@ -1,19 +1,21 @@
 import { RecipePhotoInput } from '@api/features/recipe-photo/dto';
-import { apiRecipeConstants } from '@api/utilities/constants';
+import {
+  apiRecipeConstants,
+  apiRecipeMessageConstants,
+} from '@api/utilities/constants';
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { MaxLength } from 'class-validator';
-import { Difficulty } from '../enums';
+import { IsIn, MaxLength } from 'class-validator';
 
 @InputType()
 export class RecipeInput {
   @MaxLength(apiRecipeConstants.nameMaxLength, {
-    message: `Name cannot be more than ${apiRecipeConstants.nameMaxLength} characters long`,
+    message: apiRecipeMessageConstants.nameMaxLengthError,
   })
   @Field()
   name: string;
 
   @MaxLength(apiRecipeConstants.descriptionMaxLength, {
-    message: `Description cannot be more than ${apiRecipeConstants.descriptionMaxLength} characters long`,
+    message: apiRecipeMessageConstants.descriptionMaxLengthError,
   })
   @Field()
   description: string;
@@ -29,8 +31,9 @@ export class RecipeInput {
   })
   cookTime: number;
 
-  @Field(() => Difficulty)
-  difficulty: Difficulty;
+  @IsIn([1, 2, 3, 4, 5], { message: 'Difficulty must be between 1 - 5' })
+  @Field(() => Int)
+  difficulty: number;
 
   @Field(() => [RecipePhotoInput], { nullable: true })
   photos: RecipePhotoInput[] | null;

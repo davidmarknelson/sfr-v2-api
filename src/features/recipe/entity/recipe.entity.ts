@@ -1,6 +1,7 @@
 import { RecipePhotoEntity } from '@api/features/recipe-photo/entity';
 import { UserEntity } from '@api/features/user/entity';
 import { apiRecipeConstants } from '@api/utilities/constants';
+import { IsIn } from 'class-validator';
 import {
   Column,
   Entity,
@@ -8,7 +9,6 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Difficulty } from '../dto';
 
 @Entity('recipes')
 export class RecipeEntity {
@@ -30,8 +30,9 @@ export class RecipeEntity {
   @Column('int')
   cookTime: number;
 
-  @Column({ type: 'enum', enum: Difficulty })
-  difficulty: Difficulty;
+  @IsIn([1, 2, 3, 4, 5], { message: 'Difficulty must be between 1 - 5' })
+  @Column({ type: 'int' })
+  difficulty: number;
 
   @OneToMany(() => RecipePhotoEntity, (recipePhoto) => recipePhoto.recipe, {
     cascade: true,

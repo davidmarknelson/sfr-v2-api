@@ -6,24 +6,6 @@ type AccessTokenType {
   accessToken: String!
 }
 
-"""Levels of difficulty for a recipe"""
-enum Difficulty {
-  """Highest difficulty"""
-  Five
-
-  """Second highest difficulty"""
-  Four
-
-  """Lowest difficulty"""
-  One
-
-  """Medium difficulty"""
-  Three
-
-  """Second lowest difficulty"""
-  Two
-}
-
 type MessageType {
   message: String!
 }
@@ -45,7 +27,7 @@ input RecipeInput {
   """Number of minutes it takes to cook the meal"""
   cookTime: Int!
   description: String!
-  difficulty: Difficulty!
+  difficulty: Int!
   ingredients: [String!]!
   instructions: [String!]!
   name: String!
@@ -68,7 +50,9 @@ type RecipeType {
   cookTime: Int!
   creator: RecipeUserType!
   description: String!
-  difficulty: Difficulty!
+
+  """Must be between 1 (easy) - 5 (difficulty)"""
+  difficulty: Int!
   id: Int!
   ingredients: [String!]!
   instructions: [String!]!

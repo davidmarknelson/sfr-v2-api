@@ -1,3 +1,4 @@
+import { PsqlError } from '@api/data-access/constants';
 import {
   IdArg,
   MessageType,
@@ -8,7 +9,12 @@ import { DecodedJwt } from '@api/features/auth/decorators';
 import { AccessTokenPayloadType } from '@api/features/auth/dto';
 import { JwtAuthGuard } from '@api/features/auth/guards';
 import { NameReplaceDashPipe } from '@api/utilities/pipe';
-import { NotFoundException, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  InternalServerErrorException,
+  NotFoundException,
+  UseGuards,
+} from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { RecipeInput, RecipesAndCountType, RecipeType } from '../dto';
 import { RecipeCreatorGuard } from '../guards/recipe-creator.guard';
@@ -45,7 +51,13 @@ export class RecipeResolver {
     @Args('recipe') recipe: RecipeInput,
     @DecodedJwt() decodedJwt: AccessTokenPayloadType,
   ): Promise<RecipeType> {
-    return this.recipeService.create(recipe, decodedJwt.sub);
+    return this.recipeService.create(recipe, decodedJwt.sub).catch((err) => {
+      if (err.code === PsqlError.UNIQUE && err.detail.includes('name')) {
+        throw new BadRequestException('A recipe with that name already exists');
+      } else {
+        throw new InternalServerErrorException('There was an error');
+      }
+    });
   }
 
   @UseGuards(JwtAuthGuard, RecipeCreatorGuard)

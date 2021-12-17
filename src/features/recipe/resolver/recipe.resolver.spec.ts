@@ -1,6 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Difficulty, RecipesAndCountType, RecipeType } from '../dto';
+import { RecipesAndCountType, RecipeType } from '../dto';
 import { RecipeService } from '../service';
 import { RecipeResolver } from './recipe.resolver';
 
@@ -11,7 +11,7 @@ const recipe: RecipeType = {
   instructions: [],
   description: '',
   cookTime: 20,
-  difficulty: Difficulty.One,
+  difficulty: 1,
   photos: [
     {
       id: 1,
@@ -96,7 +96,7 @@ describe('RecipeResolver', () => {
             instructions: [],
             description: '',
             cookTime: 20,
-            difficulty: Difficulty.One,
+            difficulty: 1,
             photos: [
               {
                 path: '/recipe-photo/1',

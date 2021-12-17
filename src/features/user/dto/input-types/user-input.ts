@@ -1,4 +1,5 @@
 import { apiUserConstants } from '@api/utilities/constants';
+import { apiUserMessageConstants } from '@api/utilities/constants/user-message-constants';
 import { Field, InputType } from '@nestjs/graphql';
 import { IsEmail, Length, Matches, NotContains } from 'class-validator';
 
@@ -8,10 +9,10 @@ export class UserInput {
     apiUserConstants.usernameMinLength,
     apiUserConstants.usernameMaxLength,
     {
-      message: `Username must be between ${apiUserConstants.usernameMinLength} and ${apiUserConstants.usernameMaxLength} characters long`,
+      message: apiUserMessageConstants.usernameLength,
     },
   )
-  @NotContains(' ', { message: 'Username must not contain a space' })
+  @NotContains(' ', { message: apiUserMessageConstants.usernameSpace })
   @Field({
     description: `Must be between ${apiUserConstants.usernameMinLength} and ${apiUserConstants.usernameMaxLength} characters long and not contain a space`,
   })
@@ -22,8 +23,7 @@ export class UserInput {
   email: string;
 
   @Matches(new RegExp(apiUserConstants.passwordRegex), {
-    message:
-      'Password must contain a letter, a number, a special character, and be at least 12 characters long',
+    message: apiUserMessageConstants.passwordRegex,
   })
   @Field({
     description:
