@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { join } from 'path';
 import { NodeEnv, validate } from './env.validation';
 import { ApiTestingModule } from './features/api-testing/api-testing.module';
 import { AuthModule } from './features/auth/auth.module';
@@ -17,7 +16,9 @@ import { UserModule } from './features/user/user.module';
         process.env.NODE_ENV === NodeEnv.Test ? ['.test.env'] : ['.env'],
     }),
     GraphQLModule.forRoot({
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      autoSchemaFile: true,
+      // Debugging purposes
+      // autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       cors: {
         origin: process.env.CLIENT_URL,
