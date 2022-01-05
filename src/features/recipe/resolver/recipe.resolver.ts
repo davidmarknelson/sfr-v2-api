@@ -16,7 +16,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { RecipeInput, RecipesAndCountType, RecipeType } from '../dto';
+import {
+  RecipeEditInput,
+  RecipeInput,
+  RecipesAndCountType,
+  RecipeType,
+} from '../dto';
 import { RecipeCreatorGuard } from '../guards/recipe-creator.guard';
 import { RecipeService } from '../service';
 
@@ -54,6 +59,34 @@ export class RecipeResolver {
     return this.recipeService.create(recipe, decodedJwt.sub).catch((err) => {
       if (err.code === PsqlError.UNIQUE && err.detail.includes('name')) {
         throw new BadRequestException('A recipe with that name already exists');
+      } else if (
+        err.code === PsqlError.UNIQUE &&
+        (err.detail.includes('path') ||
+          err.detail.includes('cloudinaryPublicId'))
+      ) {
+        throw new BadRequestException(
+          'A recipe with that photo already exists',
+        );
+      } else {
+        throw new InternalServerErrorException('There was an error');
+      }
+    });
+  }
+
+  @UseGuards(JwtAuthGuard, RecipeCreatorGuard)
+  @Mutation(() => RecipeType)
+  editRecipe(@Args('recipe') recipe: RecipeEditInput): Promise<RecipeType> {
+    return this.recipeService.edit(recipe).catch((err) => {
+      if (err.code === PsqlError.UNIQUE && err.detail.includes('name')) {
+        throw new BadRequestException('A recipe with that name already exists');
+      } else if (
+        err.code === PsqlError.UNIQUE &&
+        (err.detail.includes('path') ||
+          err.detail.includes('cloudinaryPublicId'))
+      ) {
+        throw new BadRequestException(
+          'A recipe with that photo already exists',
+        );
       } else {
         throw new InternalServerErrorException('There was an error');
       }

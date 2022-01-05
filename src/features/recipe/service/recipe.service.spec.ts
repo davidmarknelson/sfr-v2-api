@@ -39,6 +39,10 @@ describe('RecipeService', () => {
             findAndCount: jest.fn().mockResolvedValue([[recipe], 1]),
             findOne: jest.fn().mockResolvedValue(recipe),
             save: jest.fn().mockResolvedValue(recipe),
+            update: jest.fn().mockResolvedValue({
+              raw: [],
+              affected: 1,
+            }),
             delete: jest.fn().mockResolvedValue({ raw: [], affected: 1 }),
           },
         },
@@ -100,6 +104,34 @@ describe('RecipeService', () => {
         ),
       ).toEqual(recipe);
       expect(repoSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('edit', () => {
+    it('should edit and return the updated recipe', async () => {
+      const repoSpy = jest.spyOn(repo, 'update');
+      const serviceSpy = jest
+        .spyOn(service, 'findOneById')
+        .mockResolvedValue(recipe as RecipeEntity);
+      expect(
+        await service.edit({
+          id: 1,
+          name: 'sandwich',
+          description: '',
+          ingredients: [],
+          instructions: [],
+          cookTime: 0,
+          difficulty: 1,
+          photos: [
+            {
+              path: '/recipe-photo/1',
+              cloudinaryPublicId: 'someId',
+            },
+          ],
+        }),
+      ).toEqual(recipe);
+      expect(repoSpy).toHaveBeenCalled();
+      expect(serviceSpy).toHaveBeenCalled();
     });
   });
 

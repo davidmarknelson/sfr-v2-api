@@ -157,4 +157,43 @@ describe('RecipesResolver (e2e)', () => {
         });
     });
   });
+
+  describe('Edit recipe', () => {
+    let token: string;
+    beforeEach(async () => {
+      await getConnection().synchronize(true);
+      await Support.createRecipes(app);
+      await request(app.getHttpServer())
+        .post(AuthQueriesAndMutations.graphqlEndpoint)
+        .send(
+          AuthQueriesAndMutations.loginQuery('email@email.com', 'password!234'),
+        )
+        .then((res) => {
+          token = res.body.data.login.accessToken;
+        });
+    });
+
+    it('should edit a recipe', async () => {
+      return request(app.getHttpServer())
+        .post(RecipeQueriesAndMutations.graphqlEndpoint)
+        .set('Authorization', 'Bearer ' + token)
+        .send(
+          RecipeQueriesAndMutations.recipeEditMutation({
+            id: 1,
+            name: 'New Recipe',
+            description: 'Description of recipe',
+            ingredients: ['2 large eggs', '1 small slice of ham'],
+            instructions: ['Whisk eggs', 'Spray the muffin tray with oil'],
+            cookTime: 20,
+            difficulty: 1,
+            photos: [],
+          }),
+        )
+        .expect(200)
+        .then((data) => {
+          expect(data.body.data.editRecipe.name).toEqual('New Recipe');
+          expect(data.body.data.editRecipe.ingredients).toHaveLength(2);
+        });
+    });
+  });
 });

@@ -1,9 +1,9 @@
 import { IdArg, NameArg, PaginationArg } from '@api/data-access/dto';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Args } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
-import { RecipeInput, RecipeType } from '../dto';
+import { RecipeEditInput, RecipeInput, RecipeType } from '../dto';
 import { RecipeEntity } from '../entity';
 
 @Injectable()
@@ -32,15 +32,32 @@ export class RecipeService {
   findOneById(@Args() idArg: IdArg): Promise<RecipeEntity> {
     return this.recipeRepository.findOne({
       where: idArg,
-      relations: ['creator'],
+      relations: ['creator', 'photos'],
     });
   }
 
-  create(@Args() recipe: RecipeInput, creatorId: number): Promise<RecipeType> {
-    return this.recipeRepository.save({
+  async create(
+    @Args() recipe: RecipeInput,
+    creatorId: number,
+  ): Promise<RecipeType> {
+    const savedRecipe = await this.recipeRepository.save({
       ...recipe,
       creator: { id: creatorId },
     });
+    return this.findOneById({ id: savedRecipe.id });
+  }
+
+  async edit(@Args() recipe: RecipeEditInput): Promise<RecipeEntity> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, photos, ...formattedRecipe } = recipe;
+    const updateRecipeResults = await this.recipeRepository.update(
+      id,
+      formattedRecipe,
+    );
+    if (!updateRecipeResults.affected) {
+      throw new NotFoundException();
+    }
+    return this.findOneById({ id });
   }
 
   delete(@Args() IdArg: IdArg): Promise<DeleteResult> {

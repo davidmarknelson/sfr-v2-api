@@ -1,4 +1,4 @@
-import { RecipeInput } from '@api/features/recipe/dto';
+import { RecipeEditInput, RecipeInput } from '@api/features/recipe/dto';
 
 export class RecipeQueriesAndMutations {
   static graphqlEndpoint = '/graphql';
@@ -76,6 +76,36 @@ export class RecipeQueriesAndMutations {
       operationName: 'createRecipe',
       query: `mutation createRecipe($recipe: RecipeInput!) {
       createRecipe(recipe: $recipe) {
+        id
+        name
+        description
+        ingredients
+        instructions
+        cookTime
+        difficulty
+        photos {
+          id
+          path
+          cloudinaryPublicId
+        }
+      }
+    }`,
+      variables: {
+        recipe,
+      },
+    };
+  }
+  static recipeEditMutation(recipe: RecipeEditInput): {
+    operationName: string;
+    query: string;
+    variables: {
+      recipe: RecipeEditInput;
+    };
+  } {
+    return {
+      operationName: 'editRecipe',
+      query: `mutation editRecipe($recipe: RecipeEditInput!) {
+     editRecipe(recipe: $recipe) {
         id
         name
         description
