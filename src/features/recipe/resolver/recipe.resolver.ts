@@ -56,21 +56,7 @@ export class RecipeResolver {
     @Args('recipe') recipe: RecipeInput,
     @DecodedJwt() decodedJwt: AccessTokenPayloadType,
   ): Promise<RecipeType> {
-    return this.recipeService.create(recipe, decodedJwt.sub).catch((err) => {
-      if (err.code === PsqlError.UNIQUE && err.detail.includes('name')) {
-        throw new BadRequestException('A recipe with that name already exists');
-      } else if (
-        err.code === PsqlError.UNIQUE &&
-        (err.detail.includes('path') ||
-          err.detail.includes('cloudinaryPublicId'))
-      ) {
-        throw new BadRequestException(
-          'A recipe with that photo already exists',
-        );
-      } else {
-        throw new InternalServerErrorException('There was an error');
-      }
-    });
+    return this.recipeService.create(recipe, decodedJwt.sub);
   }
 
   @UseGuards(JwtAuthGuard, RecipeCreatorGuard)
