@@ -1,4 +1,3 @@
-import { PsqlError } from '@api/data-access/constants';
 import {
   IdArg,
   MessageType,
@@ -9,12 +8,7 @@ import { DecodedJwt } from '@api/features/auth/decorators';
 import { AccessTokenPayloadType } from '@api/features/auth/dto';
 import { JwtAuthGuard } from '@api/features/auth/guards';
 import { NameReplaceDashPipe } from '@api/utilities/pipe';
-import {
-  BadRequestException,
-  InternalServerErrorException,
-  NotFoundException,
-  UseGuards,
-} from '@nestjs/common';
+import { NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   RecipeEditInput,
@@ -62,21 +56,7 @@ export class RecipeResolver {
   @UseGuards(JwtAuthGuard, RecipeCreatorGuard)
   @Mutation(() => RecipeType)
   editRecipe(@Args('recipe') recipe: RecipeEditInput): Promise<RecipeType> {
-    return this.recipeService.edit(recipe).catch((err) => {
-      if (err.code === PsqlError.UNIQUE && err.detail.includes('name')) {
-        throw new BadRequestException('A recipe with that name already exists');
-      } else if (
-        err.code === PsqlError.UNIQUE &&
-        (err.detail.includes('path') ||
-          err.detail.includes('cloudinaryPublicId'))
-      ) {
-        throw new BadRequestException(
-          'A recipe with that photo already exists',
-        );
-      } else {
-        throw new InternalServerErrorException('There was an error');
-      }
-    });
+    return this.recipeService.edit(recipe);
   }
 
   @UseGuards(JwtAuthGuard, RecipeCreatorGuard)
