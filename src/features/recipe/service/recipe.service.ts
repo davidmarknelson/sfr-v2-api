@@ -59,7 +59,7 @@ export class RecipeService {
       const foundRecipe = await this.findOneById({ id });
 
       const recipePhotosToDelete = foundRecipe.photos.filter((currentPhoto) => {
-        return !photos.some(
+        return !photos.find(
           (incommingPhoto) =>
             incommingPhoto.cloudinaryPublicId ===
             currentPhoto.cloudinaryPublicId,
@@ -67,13 +67,13 @@ export class RecipeService {
       });
 
       if (recipePhotosToDelete.length) {
-        await Promise.all([
+        await Promise.all(
           recipePhotosToDelete.map((photoToDelete) =>
             cloudinary.uploader.destroy(photoToDelete.cloudinaryPublicId, {
               invalidate: true,
             }),
           ),
-        ]);
+        );
 
         await getConnection()
           .createQueryBuilder()
