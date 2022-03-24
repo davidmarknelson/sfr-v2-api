@@ -12,7 +12,7 @@ export class UserResolver {
 
   @UseGuards(JwtAuthGuard)
   @Query(() => UserType)
-  async user(
+  async profile(
     @DecodedJwt() decodedJwt: AccessTokenPayloadType,
   ): Promise<UserType> {
     return this.userService.findOneById({ id: decodedJwt.sub });

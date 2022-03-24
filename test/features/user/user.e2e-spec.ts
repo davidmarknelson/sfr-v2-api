@@ -21,7 +21,7 @@ describe('UserResolver (e2e)', () => {
     app.close();
   });
 
-  describe('User', () => {
+  describe('Profile', () => {
     let token: string;
     beforeEach(async () => {
       await getConnection().synchronize(true);
@@ -34,11 +34,11 @@ describe('UserResolver (e2e)', () => {
       return request(app.getHttpServer())
         .post(UserQueriesAndMutations.graphqlEndpoint)
         .set('Authorization', 'Bearer ' + token)
-        .send(UserQueriesAndMutations.userQuery())
+        .send(UserQueriesAndMutations.profileQuery())
         .expect(200)
         .then((data) => {
-          expect(data.body.data.user.id).toEqual(1);
-          expect(data.body.data.user.username).toEqual('some-user');
+          expect(data.body.data.profile.id).toEqual(1);
+          expect(data.body.data.profile.username).toEqual('some-user');
         });
     });
   });

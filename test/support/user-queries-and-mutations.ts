@@ -1,13 +1,13 @@
 export class UserQueriesAndMutations {
   static graphqlEndpoint = '/graphql';
-  static userQuery(): {
+  static profileQuery(): {
     operationName: string;
     query: string;
   } {
     return {
-      operationName: 'user',
-      query: `query user {
-        user {
+      operationName: 'profile',
+      query: `query profile {
+        profile {
           id
           email
           username

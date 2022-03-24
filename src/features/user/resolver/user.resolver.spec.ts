@@ -38,7 +38,7 @@ describe('UserResolver', () => {
   describe('user', () => {
     it('should return a user', async () => {
       const serviceSpy = jest.spyOn(userService, 'findOneById');
-      expect(await resolver.user({ username: 'some-user', sub: 1 })).toEqual(
+      expect(await resolver.profile({ username: 'some-user', sub: 1 })).toEqual(
         user,
       );
       expect(serviceSpy).toHaveBeenCalled();
