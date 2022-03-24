@@ -7,7 +7,7 @@ import {
   AuthQueriesAndMutations,
   RecipeQueriesAndMutations,
   Support,
-} from '../support';
+} from '../../support';
 
 describe('RecipesResolver (e2e)', () => {
   let app: INestApplication;
@@ -101,7 +101,7 @@ describe('RecipesResolver (e2e)', () => {
         });
     });
 
-    it('should create a recipe with a photo', async () => {
+    xit('should create a recipe with a photo', async () => {
       return request(app.getHttpServer())
         .post(RecipeQueriesAndMutations.graphqlEndpoint)
         .set('Authorization', 'Bearer ' + token)
@@ -173,7 +173,7 @@ describe('RecipesResolver (e2e)', () => {
         });
     });
 
-    it('should edit a recipe', async () => {
+    xit('should edit a recipe', async () => {
       return request(app.getHttpServer())
         .post(RecipeQueriesAndMutations.graphqlEndpoint)
         .set('Authorization', 'Bearer ' + token)

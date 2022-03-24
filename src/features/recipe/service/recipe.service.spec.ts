@@ -109,7 +109,7 @@ describe('RecipeService', () => {
 
   describe('edit', () => {
     it('should edit and return the updated recipe', async () => {
-      const repoSpy = jest.spyOn(repo, 'update');
+      const repoSpy = jest.spyOn(repo, 'save');
       const serviceSpy = jest
         .spyOn(service, 'findOneById')
         .mockResolvedValue(recipe as RecipeEntity);

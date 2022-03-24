@@ -3,7 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { getConnection } from 'typeorm';
-import { AuthQueriesAndMutations, Support } from '../support';
+import { AuthQueriesAndMutations, Support } from '../../support';
 
 describe('AuthResolver (e2e)', () => {
   let app: INestApplication;
