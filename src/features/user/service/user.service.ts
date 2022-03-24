@@ -1,4 +1,4 @@
-import { EmailArg } from '@api/data-access/dto';
+import { EmailArg, IdArg } from '@api/data-access/dto';
 import { Injectable } from '@nestjs/common';
 import { Args } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,6 +16,12 @@ export class UserService {
   findOneByEmail(@Args() emailArg: EmailArg): Promise<UserEntity> {
     return this.userRepository.findOne({
       where: emailArg,
+    });
+  }
+
+  findOneById(@Args() idArg: IdArg): Promise<UserEntity> {
+    return this.userRepository.findOne(idArg, {
+      relations: ['recipes'],
     });
   }
 

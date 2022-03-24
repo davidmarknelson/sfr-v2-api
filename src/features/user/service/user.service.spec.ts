@@ -56,4 +56,16 @@ describe('UserService', () => {
       expect(repoSpy).toHaveBeenCalled();
     });
   });
+
+  describe('findOneById', () => {
+    it('should return a user', async () => {
+      const repoSpy = jest.spyOn(repo, 'findOne');
+      expect(
+        await service.findOneById({
+          id: 1,
+        }),
+      ).toEqual(user);
+      expect(repoSpy).toHaveBeenCalled();
+    });
+  });
 });
