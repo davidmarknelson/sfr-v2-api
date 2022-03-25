@@ -37,13 +37,13 @@ export class UserService {
 
     const foundUsername = await this.userRepository.findOne({ username });
 
-    if (foundUsername) {
+    if (foundUsername && foundUsername.id !== idArg.id) {
       throw new BadRequestException('That username is already taken');
     }
 
     const foundEmail = await this.userRepository.findOne({ email });
 
-    if (foundEmail) {
+    if (foundEmail && foundEmail.id !== idArg.id) {
       throw new BadRequestException('That email is already in user');
     }
 
