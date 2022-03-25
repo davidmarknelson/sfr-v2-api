@@ -1,9 +1,9 @@
 import { EmailArg, IdArg } from '@api/data-access/dto';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Args } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserInput } from '../dto';
+import { ProfileEditInput, UserInput } from '../dto';
 import { UserEntity } from '../entity';
 
 @Injectable()
@@ -27,5 +27,32 @@ export class UserService {
 
   create(@Args('user') user: UserInput): Promise<UserEntity> {
     return this.userRepository.save(user);
+  }
+
+  async editProfile(
+    @Args() idArg: IdArg,
+    @Args() profileEdit: ProfileEditInput,
+  ): Promise<UserEntity> {
+    const { username, email } = profileEdit;
+
+    const foundUsername = await this.userRepository.findOne({ username });
+
+    if (foundUsername) {
+      throw new BadRequestException('That username is already taken');
+    }
+
+    const foundEmail = await this.userRepository.findOne({ email });
+
+    if (foundEmail) {
+      throw new BadRequestException('That email is already in user');
+    }
+
+    await this.userRepository.save({
+      id: idArg.id,
+      username,
+      email,
+    });
+
+    return this.userRepository.findOne(idArg);
   }
 }

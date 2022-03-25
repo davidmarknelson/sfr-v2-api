@@ -44,7 +44,7 @@ describe('UserService', () => {
   });
 
   describe('create', () => {
-    it('should create and return a new recipe', async () => {
+    it('should create and return a new user', async () => {
       const repoSpy = jest.spyOn(repo, 'save');
       expect(
         await service.create({
@@ -54,6 +54,35 @@ describe('UserService', () => {
         }),
       ).toEqual(user);
       expect(repoSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('editProfile', () => {
+    it('should edit and return the edited user', async () => {
+      const usernameSpy = jest
+        .spyOn(repo, 'findOne')
+        .mockResolvedValueOnce(null);
+      const emailSpy = jest.spyOn(repo, 'findOne').mockResolvedValueOnce(null);
+      const saveSpy = jest.spyOn(repo, 'save');
+      const getProfileSpy = jest.spyOn(repo, 'save').mockResolvedValueOnce({
+        id: 1,
+        username: 'newuser1',
+        email: 'newemail@email.com',
+        password: 'password',
+      });
+      expect(
+        await service.editProfile(
+          { id: 1 },
+          {
+            username: 'newuser1',
+            email: 'newemail@email.com',
+          },
+        ),
+      ).toEqual(user);
+      expect(saveSpy).toHaveBeenCalled();
+      expect(usernameSpy).toHaveBeenCalled();
+      expect(emailSpy).toHaveBeenCalled();
+      expect(getProfileSpy).toHaveBeenCalled();
     });
   });
 
