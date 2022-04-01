@@ -1,9 +1,9 @@
-import { EmailArg, IdArg } from '@api/data-access/dto';
+import { EmailArg, IdArg, MessageType } from '@api/data-access/dto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Args } from '@nestjs/graphql';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ProfileEditInput, UserInput } from '../dto';
+import { PasswordEditInput, ProfileEditInput, UserInput } from '../dto';
 import { UserEntity } from '../entity';
 
 @Injectable()
@@ -54,5 +54,17 @@ export class UserService {
     });
 
     return this.userRepository.findOne(idArg);
+  }
+
+  async updatePassword(
+    @Args() idArg: IdArg,
+    @Args() passwordArg: PasswordEditInput,
+  ): Promise<MessageType> {
+    await this.userRepository.save({
+      id: idArg.id,
+      password: passwordArg.password,
+    });
+
+    return { message: 'Password updated' };
   }
 }

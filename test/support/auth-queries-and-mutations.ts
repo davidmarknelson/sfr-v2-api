@@ -62,4 +62,24 @@ export class AuthQueriesAndMutations {
       },
     };
   }
+
+  static updatePasswordMutation(password: string): {
+    operationName: string;
+    query: string;
+    variables: {
+      password: { password: string };
+    };
+  } {
+    return {
+      operationName: 'updatePassword',
+      query: `mutation updatePassword($password: PasswordEditInput!) {
+        updatePassword(password: $password) {
+          message
+        }
+      }`,
+      variables: {
+        password: { password },
+      },
+    };
+  }
 }

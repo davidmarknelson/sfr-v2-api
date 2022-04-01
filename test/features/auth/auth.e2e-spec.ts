@@ -274,6 +274,117 @@ describe('AuthResolver (e2e)', () => {
     });
   });
 
+  describe('Edit Password', () => {
+    let token: string;
+
+    beforeEach(async () => {
+      await getConnection().synchronize(true);
+      await Support.createUser(app);
+      await request(app.getHttpServer())
+        .post(AuthQueriesAndMutations.graphqlEndpoint)
+        .send(
+          AuthQueriesAndMutations.loginQuery('email@email.com', 'password!234'),
+        )
+        .then((res) => {
+          token = res.body.data.login.accessToken;
+        });
+    });
+
+    it('should return an error if the password is fewer than 12 characters long', () => {
+      return request(app.getHttpServer())
+        .post(AuthQueriesAndMutations.graphqlEndpoint)
+        .set('Authorization', 'Bearer ' + token)
+        .send(AuthQueriesAndMutations.updatePasswordMutation('password!23'))
+        .expect(200)
+        .then((res) => {
+          expect(res.body.data).toEqual(null);
+          expect(res.body.errors[0].extensions.response.message).toEqual([
+            'Password must contain a letter, a number, a special character, and be at least 12 characters long',
+          ]);
+          expect(res.body.errors[0].extensions.response.statusCode).toEqual(
+            400,
+          );
+        });
+    });
+
+    it('should return an error if the password does not contain a special character', () => {
+      return request(app.getHttpServer())
+        .post(AuthQueriesAndMutations.graphqlEndpoint)
+        .set('Authorization', 'Bearer ' + token)
+        .send(AuthQueriesAndMutations.updatePasswordMutation('password1234'))
+        .expect(200)
+        .then((res) => {
+          expect(res.body.data).toEqual(null);
+          expect(res.body.errors[0].extensions.response.message).toEqual([
+            'Password must contain a letter, a number, a special character, and be at least 12 characters long',
+          ]);
+          expect(res.body.errors[0].extensions.response.statusCode).toEqual(
+            400,
+          );
+        });
+    });
+
+    it('should return an error if the password does not contain a letter', () => {
+      return request(app.getHttpServer())
+        .post(AuthQueriesAndMutations.graphqlEndpoint)
+        .set('Authorization', 'Bearer ' + token)
+        .send(AuthQueriesAndMutations.updatePasswordMutation('12341234!234'))
+        .expect(200)
+        .then((res) => {
+          expect(res.body.data).toEqual(null);
+          expect(res.body.errors[0].extensions.response.message).toEqual([
+            'Password must contain a letter, a number, a special character, and be at least 12 characters long',
+          ]);
+          expect(res.body.errors[0].extensions.response.statusCode).toEqual(
+            400,
+          );
+        });
+    });
+
+    it('should return an error if the password does not contain a number', () => {
+      return request(app.getHttpServer())
+        .post(AuthQueriesAndMutations.graphqlEndpoint)
+        .set('Authorization', 'Bearer ' + token)
+        .send(AuthQueriesAndMutations.updatePasswordMutation('password!asd'))
+        .expect(200)
+        .then((res) => {
+          expect(res.body.data).toEqual(null);
+          expect(res.body.errors[0].extensions.response.message).toEqual([
+            'Password must contain a letter, a number, a special character, and be at least 12 characters long',
+          ]);
+          expect(res.body.errors[0].extensions.response.statusCode).toEqual(
+            400,
+          );
+        });
+    });
+
+    it('should return a message when the password successfully updates', () => {
+      return request(app.getHttpServer())
+        .post(AuthQueriesAndMutations.graphqlEndpoint)
+        .set('Authorization', 'Bearer ' + token)
+        .send(AuthQueriesAndMutations.updatePasswordMutation('newpassword!234'))
+        .expect(200)
+        .then((res) => {
+          expect(res.body.data.updatePassword.message).toEqual(
+            'Password updated',
+          );
+        })
+        .then(() =>
+          request(app.getHttpServer())
+            .post(AuthQueriesAndMutations.graphqlEndpoint)
+            .send(
+              AuthQueriesAndMutations.loginQuery(
+                'email@email.com',
+                'newpassword!234',
+              ),
+            ),
+        )
+        .then((res) => {
+          expect(res.body.data.login.accessToken).toBeTruthy();
+        });
+    });
+  });
+
   describe('Login', () => {
     beforeEach(async () => {
       await getConnection().synchronize(true);

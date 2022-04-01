@@ -86,6 +86,21 @@ describe('UserService', () => {
     });
   });
 
+  describe('updatePassword', () => {
+    it('should edit and return a message', async () => {
+      const saveSpy = jest.spyOn(repo, 'save');
+      expect(
+        await service.updatePassword(
+          { id: 1 },
+          {
+            password: 'newpassword',
+          },
+        ),
+      ).toEqual({ message: 'Password updated' });
+      expect(saveSpy).toHaveBeenCalled();
+    });
+  });
+
   describe('findOneById', () => {
     it('should return a user', async () => {
       const repoSpy = jest.spyOn(repo, 'findOne');

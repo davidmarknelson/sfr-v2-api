@@ -1,5 +1,5 @@
 import { LoginArg } from '@api/data-access/dto';
-import { UserInput } from '@api/features/user/dto';
+import { PasswordEditInput } from '@api/features/user/dto';
 import { UserEntity } from '@api/features/user/entity';
 import { UserService } from '@api/features/user/service';
 import { Injectable } from '@nestjs/common';
@@ -33,7 +33,9 @@ export class AuthService {
     };
   }
 
-  createPasswordHash(@Args() user: UserInput): Promise<string> {
-    return hash(user.password, 10);
+  createPasswordHash(
+    @Args() passwordInput: PasswordEditInput,
+  ): Promise<string> {
+    return hash(passwordInput.password, 10);
   }
 }

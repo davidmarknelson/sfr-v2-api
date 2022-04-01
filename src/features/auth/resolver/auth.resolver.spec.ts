@@ -38,6 +38,9 @@ describe('AuthResolver', () => {
           provide: UserService,
           useValue: {
             create: jest.fn().mockResolvedValue(userEntity),
+            updatePassword: jest
+              .fn()
+              .mockResolvedValue({ message: 'Password updated' }),
           },
         },
       ],
@@ -99,6 +102,21 @@ describe('AuthResolver', () => {
       expect(authPasswordHashSpy).toHaveBeenCalled();
       expect(authSignTokenSpy).toHaveBeenCalled();
       expect(userCreateSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('updatePassword', () => {
+    it('should return a message', async () => {
+      const authPasswordHashSpy = jest.spyOn(authService, 'createPasswordHash');
+      const userUpdatePasswordSpy = jest.spyOn(userService, 'updatePassword');
+      expect(
+        await resolver.updatePassword(
+          { sub: 1, username: 'some-user' },
+          { password: 'password!234' },
+        ),
+      ).toEqual({ message: 'Password updated' });
+      expect(authPasswordHashSpy).toHaveBeenCalled();
+      expect(userUpdatePasswordSpy).toHaveBeenCalled();
     });
   });
 

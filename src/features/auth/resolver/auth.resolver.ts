@@ -1,7 +1,7 @@
 import { PsqlError } from '@api/data-access/constants';
-import { LoginArg } from '@api/data-access/dto';
+import { LoginArg, MessageType } from '@api/data-access/dto';
 import { DecodedJwt } from '@api/features/auth/decorators';
-import { UserInput } from '@api/features/user/dto';
+import { PasswordEditInput, UserInput } from '@api/features/user/dto';
 import { UserService } from '@api/features/user/service';
 import {
   BadRequestException,
@@ -43,7 +43,9 @@ export class AuthResolver {
   @Mutation(() => AccessTokenType)
   async signup(@Args('user') user: UserInput): Promise<AccessTokenType> {
     try {
-      const passwordHash = await this.authService.createPasswordHash(user);
+      const passwordHash = await this.authService.createPasswordHash({
+        password: user.password,
+      });
       const newUser = await this.userService.create({
         ...user,
         password: passwordHash,
@@ -62,5 +64,20 @@ export class AuthResolver {
         );
       }
     }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => MessageType)
+  async updatePassword(
+    @DecodedJwt() decodedJwt: AccessTokenPayloadType,
+    @Args('password') passwordInput: PasswordEditInput,
+  ): Promise<MessageType> {
+    const passwordHash = await this.authService.createPasswordHash(
+      passwordInput,
+    );
+    return this.userService.updatePassword(
+      { id: decodedJwt.sub },
+      { password: passwordHash },
+    );
   }
 }
